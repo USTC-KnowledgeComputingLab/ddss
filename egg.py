@@ -1,7 +1,6 @@
 from __future__ import annotations
 import sys
 import time
-from loguru import logger
 from sqlalchemy import create_engine, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
@@ -115,24 +114,15 @@ def main():
         sys.exit(1)
     addr = sys.argv[1]
 
-    logger.remove()
-    logger.add(
-        sys.stderr,
-        format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <5}</level> | <cyan>{message}</cyan>",
-    )
-
     engine = create_engine(addr)
     session = sessionmaker(engine)
-    logger.info("Engine initialized")
 
     Base.metadata.create_all(engine)
-    logger.info("Database schema ensured")
 
     search = Search()
     pool = []
     max_fact = -1
     max_idea = -1
-    logger.info("Search initialized")
 
     while True:
         count = 0
@@ -142,13 +132,11 @@ def main():
             for i in query:
                 max_fact = max(max_fact, i.id)
                 search.add(i.data)
-                logger.debug("input: {data}", data=i.data)
 
             query = sess.query(Ideas).filter(Ideas.id > max_idea)
             for i in query:
                 max_idea = max(max_idea, i.id)
                 pool.append(i.data)
-                logger.debug("idea input: {data}", data=i.data)
 
             for i in pool:
                 for o in search.execute(i):
@@ -156,18 +144,15 @@ def main():
                         with sess.begin_nested():
                             sess.add(Facts(data=o))
                         count += 1
-                        logger.debug("output: {fact}", fact=o)
                     except IntegrityError:
-                        logger.debug("repeated output: {fact}", fact=o)
+                        pass
 
             sess.commit()
 
         end = time.time()
         duration = end - begin
-        logger.info("duration: {duration:0.3f}s", duration=duration)
         if count == 0:
             delay = max(0, 1 - duration)
-            logger.info("sleeping: {delay:0.3f}s", delay=delay)
             time.sleep(delay)
 
     engine.dispose()

@@ -1,6 +1,5 @@
 import sys
 import time
-from loguru import logger
 from sqlalchemy import create_engine, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
@@ -30,22 +29,13 @@ def main():
         sys.exit(1)
     addr = sys.argv[1]
 
-    logger.remove()
-    logger.add(
-        sys.stderr,
-        format="<green>{time:YYYY-MM-DD HH:mm:ss.SSS}</green> | <level>{level: <5}</level> | <cyan>{message}</cyan>",
-    )
-
     engine = create_engine(addr)
     session = sessionmaker(engine)
-    logger.info("Engine initialized")
 
     Base.metadata.create_all(engine)
-    logger.info("Database schema ensured")
 
     search = Search()
     max_fact = -1
-    logger.info("Search initialized")
 
     while True:
         begin = time.time()
@@ -54,24 +44,21 @@ def main():
             for i in query:
                 max_fact = max(max_fact, i.id)
                 search.add(parse(i.data))
-                logger.debug("input: {data}", data=i.data)
 
             def handler(o):
                 fact = unparse(f"{o}")
                 try:
                     with sess.begin_nested():
                         sess.add(Facts(data=fact))
-                    logger.debug("output: {fact}", fact=fact)
                 except IntegrityError:
-                    logger.debug("repeated output: {fact}", fact=fact)
+                    pass
                 if len(o) != 0:
                     idea = unparse(f"--\n{o[0]}")
                     try:
                         with sess.begin_nested():
                             sess.add(Ideas(data=idea))
-                        logger.debug("idea output: {idea}", idea=idea)
                     except IntegrityError:
-                        logger.debug("repeated idea output: {idea}", idea=idea)
+                        pass
                 return False
 
             count = search.execute(handler)
@@ -79,10 +66,8 @@ def main():
 
         end = time.time()
         duration = end - begin
-        logger.info("duration: {duration:0.3f}s", duration=duration)
         if count == 0:
             delay = max(0, 1 - duration)
-            logger.info("sleeping: {delay:0.3f}s", delay=delay)
             time.sleep(delay)
 
     engine.dispose()
