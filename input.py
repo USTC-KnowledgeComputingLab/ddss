@@ -11,6 +11,8 @@ async def main(addr, engine=None, session=None):
     while True:
         try:
             data = await asyncio.get_running_loop().run_in_executor(None, input)
+            if data.strip() == "":
+                continue
         except EOFError:
             break
         async with session() as sess:
