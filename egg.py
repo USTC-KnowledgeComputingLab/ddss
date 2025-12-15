@@ -129,6 +129,7 @@ def main():
     logger.info("Database schema ensured")
 
     search = Search()
+    pool = []
     max_fact = -1
     max_idea = -1
     logger.info("Search initialized")
@@ -146,8 +147,11 @@ def main():
             query = sess.query(Ideas).filter(Ideas.id > max_idea)
             for i in query:
                 max_idea = max(max_idea, i.id)
+                pool.append(i.data)
                 logger.debug("idea input: {data}", data=i.data)
-                for o in search.execute(i.data):
+
+            for i in pool:
+                for o in search.execute(i):
                     try:
                         with sess.begin_nested():
                             sess.add(Facts(data=o))
