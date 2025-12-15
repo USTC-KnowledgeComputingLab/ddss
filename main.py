@@ -61,17 +61,17 @@ def main():
                 try:
                     with sess.begin_nested():
                         sess.add(Facts(data=fact))
+                    logger.debug("output: {fact}", fact=fact)
                 except IntegrityError:
-                    pass
-                logger.debug("output: {fact}", fact=fact)
+                    logger.debug("repeated output: {fact}", fact=fact)
                 if len(o) != 0:
                     idea = unparse(f"--\n{o[0]}")
                     try:
                         with sess.begin_nested():
                             sess.add(Ideas(data=idea))
+                        logger.debug("idea output: {idea}", idea=idea)
                     except IntegrityError:
-                        pass
-                    logger.debug("idea output: {idea}", idea=idea)
+                        logger.debug("repeated idea output: {idea}", idea=idea)
                 return False
 
             number = search.execute(handler)
