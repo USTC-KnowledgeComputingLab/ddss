@@ -23,6 +23,7 @@ async def main(addr, engine=None, session=None):
             for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
                 max_idea = max(max_idea, i.id)
                 print("idea:", Poly(dsp=i.data).dsp)
+            await sess.commit()
 
         end = asyncio.get_running_loop().time()
         duration = end - begin

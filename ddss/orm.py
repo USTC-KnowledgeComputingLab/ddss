@@ -36,5 +36,6 @@ async def insert_or_ignore(sess: AsyncSession, model, data, locks=defaultdict(la
         try:
             async with sess.begin_nested():
                 sess.add(model(data=data))
+                await sess.flush()
         except IntegrityError:
             pass
