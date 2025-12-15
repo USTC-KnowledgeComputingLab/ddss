@@ -32,7 +32,7 @@ async def initialize_database(addr: str) -> tuple[AsyncEngine, async_sessionmake
 
 
 async def insert_or_ignore(sess: AsyncSession, model, data, locks=defaultdict(lambda: asyncio.Lock())) -> None:
-    async with locks[id(sess)]:
+    async with locks[id(sess.bind)]:
         try:
             async with sess.begin_nested():
                 sess.add(model(data=data))
