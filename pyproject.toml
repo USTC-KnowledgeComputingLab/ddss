@@ -1,11 +1,10 @@
 [project]
 name = "sqlds"
-version = "0.1.0"
+version = "0.0.1"
 description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "aiosqlite>=0.22.0",
     "apyds>=0.0.7",
     "apyds-bnf>=0.0.7",
     "loguru>=0.7.3",
