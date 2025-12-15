@@ -17,7 +17,7 @@ async def main(addr, recreate=False):
     )
 
 
-if __name__ == "__main__":
+def cli():
     if len(sys.argv) == 1:
         addr = "sqlite+aiosqlite:////tmp/ddss.db"
         recreate = True
@@ -28,3 +28,7 @@ if __name__ == "__main__":
         print(f"Usage: {sys.argv[0]} [<database-addr>]")
         sys.exit(1)
     asyncio.run(main(addr, recreate))
+
+
+if __name__ == "__main__":
+    cli()

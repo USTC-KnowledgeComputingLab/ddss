@@ -14,5 +14,8 @@ dependencies = [
     "sqlalchemy>=2.0.45",
 ]
 
+[project.scripts]
+ddss = "ddss.main:cli"
+
 [tool.ruff]
 line-length = 120
