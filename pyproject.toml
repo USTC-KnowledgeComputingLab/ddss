@@ -1,7 +1,7 @@
 [project]
-name = "sqlds"
+name = "ddss"
 version = "0.0.3"
-description = "use DS with SQL"
+description = "Distributed Deductive System Sorts"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
