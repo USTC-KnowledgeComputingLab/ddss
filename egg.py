@@ -1,11 +1,45 @@
 import sys
 import time
+import typing
 from loguru import logger
 from sqlalchemy import create_engine, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
-from apyds import Search
+import egglog
+from apyds import Rule
 from apyds_bnf import parse, unparse
+
+
+class EGraphTerm(egglog.Expr):
+    def __init__(self, name: egglog.StringLike) -> None: ...
+
+
+class Search:
+    def __init__(self):
+        self.egraph = egglog.EGraph()
+        self.terms = set()
+
+    def add(self, data: str) -> None:
+        data = parse(data)
+        if not data.startswith("----\n(binary == "):
+            return
+        term = Rule(data).conclusion
+        lhs = str(term.term[2])
+        rhs = str(term.term[3])
+        self.terms.add(lhs)
+        self.terms.add(rhs)
+        self.egraph.register(egglog.union(EGraphTerm(lhs)).with_(EGraphTerm(rhs)))
+
+    def execute(self, data: str) -> typing.Generator[str]:
+        data = parse(data)
+        if not data.startswith("----\n(binary == "):
+            return
+        term = Rule(data).conclusion
+        lhs = str(term.term[2])
+        rhs = str(term.term[3])
+        if self.egraph.check_bool(EGraphTerm(lhs) == EGraphTerm(rhs)):
+            result = f"----\n(binary == {lhs} {rhs})"
+            yield unparse(result)
 
 
 class Base(DeclarativeBase):
@@ -45,36 +79,32 @@ def main():
 
     search = Search()
     max_fact = -1
+    max_idea = -1
     logger.info("Search initialized")
 
     while True:
+        count = 0
         begin = time.time()
         with session() as sess:
             query = sess.query(Facts).filter(Facts.id > max_fact)
             for i in query:
                 max_fact = max(max_fact, i.id)
-                search.add(parse(i.data))
+                search.add(i.data)
                 logger.debug("input: {data}", data=i.data)
 
-            def handler(o):
-                fact = unparse(f"{o}")
-                try:
-                    with sess.begin_nested():
-                        sess.add(Facts(data=fact))
-                    logger.debug("output: {fact}", fact=fact)
-                except IntegrityError:
-                    logger.debug("repeated output: {fact}", fact=fact)
-                if len(o) != 0:
-                    idea = unparse(f"--\n{o[0]}")
+            query = sess.query(Ideas).filter(Ideas.id > max_idea)
+            for i in query:
+                max_idea = max(max_idea, i.id)
+                logger.debug("query: {data}", data=i.data)
+                for o in search.execute(i.data):
                     try:
                         with sess.begin_nested():
-                            sess.add(Ideas(data=idea))
-                        logger.debug("idea output: {idea}", idea=idea)
+                            sess.add(Facts(data=o))
+                        count += 1
+                        logger.debug("output: {fact}", fact=o)
                     except IntegrityError:
-                        logger.debug("repeated idea output: {idea}", idea=idea)
-                return False
+                        logger.debug("repeated output: {fact}", fact=o)
 
-            count = search.execute(handler)
             sess.commit()
 
         end = time.time()
