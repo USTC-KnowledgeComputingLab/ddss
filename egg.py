@@ -1,3 +1,4 @@
+from __future__ import annotations
 import sys
 import time
 from loguru import logger
@@ -5,12 +6,30 @@ from sqlalchemy import create_engine, Integer, Text
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import sessionmaker, DeclarativeBase, Mapped, mapped_column
 import egglog
-from apyds import Rule
+from apyds import Rule, Term, List
 from apyds_bnf import parse, unparse
 
 
 class EGraphTerm(egglog.Expr):
     def __init__(self, name: egglog.StringLike) -> None: ...
+
+    @classmethod
+    def begin(cls) -> EGraphTerm: ...
+
+    @classmethod
+    def pair(cls, lhs: EGraphTerm, rhs: EGraphTerm) -> EGraphTerm: ...
+
+
+def _ds_to_egraph(data):
+    term = data.term
+    if isinstance(term, List):
+        result = EGraphTerm.begin()
+        for i in range(len(term)):
+            child = _ds_to_egraph(term[i])
+            result = EGraphTerm.pair(result, child)
+        return result
+    else:
+        return EGraphTerm(str(term))
 
 
 class Search:
@@ -28,8 +47,9 @@ class Search:
         return lhs, rhs
 
     def _ast(self, data):
-        # TODO: 现在只支持原子
-        return EGraphTerm(data)
+        result = _ds_to_egraph(Term(data))
+        self.egraph.register(result)
+        return result
 
     def _set_equality(self, lhs, rhs):
         self.egraph.register(egglog.union(self._ast(lhs)).with_(self._ast(rhs)))
