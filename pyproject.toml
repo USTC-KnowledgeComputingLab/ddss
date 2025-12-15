@@ -8,6 +8,7 @@ dependencies = [
     "aiosqlite>=0.22.0",
     "apyds>=0.0.7",
     "apyds-bnf>=0.0.7",
+    "loguru>=0.7.3",
     "sqlalchemy>=2.0.45",
 ]
 
