@@ -36,7 +36,7 @@ async def main(addr, engine=None, session=None):
         end = asyncio.get_running_loop().time()
         duration = end - begin
         if count == 0:
-            delay = max(0, 1 - duration)
+            delay = max(0, 0.1 - duration)
             await asyncio.sleep(delay)
 
     await engine.dispose()
