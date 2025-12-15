@@ -36,7 +36,10 @@ async def main(addr):
         duration = end - begin
         if count == 0:
             delay = max(0, 1 - duration)
-            await asyncio.sleep(delay)
+            try:
+                await asyncio.sleep(delay)
+            except asyncio.CancelledError:
+                break
 
     await engine.dispose()
 
