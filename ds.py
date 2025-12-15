@@ -1,8 +1,8 @@
 import sys
 import time
 from apyds import Search
-from apyds_bnf import parse, unparse
 from orm import initialize_database, insert_or_ignore, Facts, Ideas
+from poly import Poly
 
 
 def main(addr):
@@ -13,18 +13,17 @@ def main(addr):
 
     while True:
         begin = time.time()
-        with session() as sess:
-            query = sess.query(Facts).filter(Facts.id > max_fact)
-            for i in query:
-                max_fact = max(max_fact, i.id)
-                search.add(parse(i.data))
 
-            def handler(o):
-                fact = unparse(f"{o}")
-                insert_or_ignore(sess, Facts, fact)
-                if len(o) != 0:
-                    idea = unparse(f"--\n{o[0]}")
-                    insert_or_ignore(sess, Ideas, idea)
+        with session() as sess:
+            for i in sess.query(Facts).filter(Facts.id > max_fact):
+                max_fact = max(max_fact, i.id)
+                search.add(Poly(dsp=i.data).ds)
+
+            def handler(rule):
+                poly = Poly(rule=rule)
+                insert_or_ignore(sess, Facts, poly.dsp)
+                if idea := poly.idea:
+                    insert_or_ignore(sess, Ideas, idea.dsp)
                 return False
 
             count = search.execute(handler)

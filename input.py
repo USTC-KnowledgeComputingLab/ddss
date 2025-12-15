@@ -1,7 +1,6 @@
 import sys
-from apyds import Rule
-from apyds_bnf import parse, unparse
 from orm import initialize_database, insert_or_ignore, Facts, Ideas
+from poly import Poly
 
 
 def main(addr):
@@ -10,12 +9,10 @@ def main(addr):
     while True:
         data = input()
         with session() as sess:
-            o = Rule(parse(data))
-            fact = unparse(f"{o}")
-            insert_or_ignore(sess, Facts, fact)
-            if len(o) != 0:
-                idea = unparse(f"--\n{o[0]}")
-                insert_or_ignore(sess, Ideas, idea)
+            poly = Poly(dsp=data)
+            insert_or_ignore(sess, Facts, poly.dsp)
+            if idea := poly.idea:
+                insert_or_ignore(sess, Ideas, idea.dsp)
             sess.commit()
 
     engine.dispose()

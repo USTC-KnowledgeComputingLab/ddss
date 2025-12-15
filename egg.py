@@ -2,6 +2,7 @@ import sys
 import time
 from orm import initialize_database, insert_or_ignore, Facts, Ideas
 from egraph import Search
+from poly import Poly
 
 
 def main(addr):
@@ -16,17 +17,15 @@ def main(addr):
         count = 0
         begin = time.time()
         with session() as sess:
-            query = sess.query(Facts).filter(Facts.id > max_fact)
-            for i in query:
+            for i in sess.query(Facts).filter(Facts.id > max_fact):
                 max_fact = max(max_fact, i.id)
-                search.add(i.data)
-            query = sess.query(Ideas).filter(Ideas.id > max_idea)
-            for i in query:
+                search.add(Poly(dsp=i.data))
+            for i in sess.query(Ideas).filter(Ideas.id > max_idea):
                 max_idea = max(max_idea, i.id)
-                pool.append(i.data)
+                pool.append(Poly(dsp=i.data))
             for i in pool:
                 for o in search.execute(i):
-                    insert_or_ignore(sess, Facts, o)
+                    insert_or_ignore(sess, Facts, o.dsp)
             sess.commit()
 
         end = time.time()
