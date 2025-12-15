@@ -9,7 +9,7 @@ async def main(addr):
 
     while True:
         try:
-            data = input()
+            data = await asyncio.get_running_loop().run_in_executor(None, input)
         except EOFError:
             break
         async with session() as sess:
