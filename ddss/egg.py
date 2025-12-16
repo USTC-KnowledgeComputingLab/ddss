@@ -3,7 +3,6 @@ import asyncio
 from sqlalchemy import select
 from .orm import initialize_database, insert_or_ignore, Facts, Ideas
 from .egraph import Search
-from .poly import Poly
 
 
 async def main(addr, engine=None, session=None):
@@ -23,16 +22,16 @@ async def main(addr, engine=None, session=None):
             async with session() as sess:
                 for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
                     max_idea = max(max_idea, i.id)
-                    pool.append(Poly(ds=i.data))
+                    pool.append(i.data)
                 for i in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
                     max_fact = max(max_fact, i.id)
-                    search.add(Poly(ds=i.data))
+                    search.add(i.data)
                 tasks = []
                 next_pool = []
                 for i in pool:
                     for o in search.execute(i):
-                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, o.ds)))
-                        if o.ds == i.ds:
+                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, o)))
+                        if i == o:
                             break
                     else:
                         next_pool.append(i)

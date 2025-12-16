@@ -4,7 +4,7 @@ from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
 from apyds_bnf import parse
 from .orm import initialize_database, insert_or_ignore, Facts, Ideas
-from .poly import Poly
+from .poly import get_idea
 
 
 async def main(addr, engine=None, session=None):
@@ -22,14 +22,13 @@ async def main(addr, engine=None, session=None):
             except (EOFError, KeyboardInterrupt):
                 raise asyncio.CancelledError()
             try:
-                parsed = parse(data)
+                ds = parse(data)
             except Exception as e:
                 print(f"error: {e}")
                 continue
             async with session() as sess:
-                poly = Poly(ds=parsed)
-                await insert_or_ignore(sess, Facts, poly.ds)
-                if idea := poly.idea:
+                await insert_or_ignore(sess, Facts, ds)
+                if idea := get_idea(ds):
                     await insert_or_ignore(sess, Ideas, idea)
                 await sess.commit()
     except asyncio.CancelledError:

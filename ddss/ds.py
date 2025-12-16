@@ -3,7 +3,7 @@ import asyncio
 from sqlalchemy import select
 from apyds import Search
 from .orm import initialize_database, insert_or_ignore, Facts, Ideas
-from .poly import Poly
+from .poly import get_idea
 
 
 async def main(addr, engine=None, session=None):
@@ -20,13 +20,13 @@ async def main(addr, engine=None, session=None):
             async with session() as sess:
                 for i in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
                     max_fact = max(max_fact, i.id)
-                    search.add(Poly(ds=i.data).ds)
+                    search.add(i.data)
                 tasks = []
 
                 def handler(rule):
-                    poly = Poly(rule=rule)
-                    tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, poly.ds)))
-                    if idea := poly.idea:
+                    ds = str(rule)
+                    tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, ds)))
+                    if idea := get_idea(ds):
                         tasks.append(asyncio.create_task(insert_or_ignore(sess, Ideas, idea)))
                     return False
 
