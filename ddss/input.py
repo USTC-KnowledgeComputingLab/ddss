@@ -1,6 +1,7 @@
 import sys
 import asyncio
-from aioconsole import ainput
+from prompt_toolkit import PromptSession
+from prompt_toolkit.patch_stdout import patch_stdout
 from apyds_bnf import parse
 from .orm import initialize_database, insert_or_ignore, Facts, Ideas
 from .poly import Poly
@@ -11,9 +12,11 @@ async def main(addr, engine=None, session=None):
         engine, session = await initialize_database(addr)
 
     try:
+        prompt = PromptSession()
         while True:
             try:
-                data = await ainput()
+                with patch_stdout():
+                    data = await prompt.prompt_async("input: ")
                 if data.strip() == "":
                     continue
             except EOFError:

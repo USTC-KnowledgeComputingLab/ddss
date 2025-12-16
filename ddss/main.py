@@ -48,6 +48,7 @@ def cli():
     else:
         print(f"Unsupported database address: {addr}")
         sys.exit(1)
+    print(f"addr: {addr}")
     asyncio.run(main(addr))
 
 
