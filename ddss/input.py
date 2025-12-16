@@ -1,5 +1,6 @@
 import sys
 import asyncio
+from aioconsole import ainput
 from .orm import initialize_database, insert_or_ignore, Facts, Ideas
 from .poly import Poly
 
@@ -11,7 +12,7 @@ async def main(addr, engine=None, session=None):
     try:
         while True:
             try:
-                data = await asyncio.get_running_loop().run_in_executor(None, input)
+                data = await ainput()
                 if data.strip() == "":
                     continue
             except EOFError:
