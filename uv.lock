@@ -163,7 +163,7 @@ wheels = [
 [[package]]
 name = "ddss"
 version = "0.0.7"
-source = { virtual = "." }
+source = { editable = "." }
 dependencies = [
     { name = "aioconsole" },
     { name = "aiomysql" },
