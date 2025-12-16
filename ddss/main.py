@@ -27,6 +27,7 @@ sqlalchemy_driver = {
     "sqlite": "aiosqlite",
     "mysql": "aiomysql",
     "mariadb": "aiomysql",
+    "postgresql": "asyncpg",
 }
 
 
