@@ -30,7 +30,7 @@ async def main(addr, engine=None, session=None):
                 poly = Poly(ds=parsed)
                 await insert_or_ignore(sess, Facts, poly.ds)
                 if idea := poly.idea:
-                    await insert_or_ignore(sess, Ideas, idea.ds)
+                    await insert_or_ignore(sess, Ideas, idea)
                 await sess.commit()
     except asyncio.CancelledError:
         pass

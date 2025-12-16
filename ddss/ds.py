@@ -27,7 +27,7 @@ async def main(addr, engine=None, session=None):
                     poly = Poly(rule=rule)
                     tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, poly.ds)))
                     if idea := poly.idea:
-                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Ideas, idea.ds)))
+                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Ideas, idea)))
                     return False
 
                 count = search.execute(handler)

@@ -17,5 +17,5 @@ class Poly:
     @property
     def idea(self):
         if not self.ds.startswith("--"):
-            return Poly(ds=f"--\n{self.ds.splitlines()[0]}")
+            return f"--\n{self.ds.splitlines()[0]}"
         return None
