@@ -90,7 +90,6 @@ class Search:
         lhs, rhs = self._extract_lhs_rhs(data)
         if self._get_equality(lhs, rhs):
             yield self._build_equality(lhs, rhs)
-            return
         if lhs.startswith("`"):
             for result in self._search_equality(rhs):
                 yield self._build_equality(result, rhs)
@@ -104,4 +103,3 @@ class Search:
         for fact in self.facts:
             if self._get_equality(str(data.rule.conclusion), fact):
                 yield data
-                return
