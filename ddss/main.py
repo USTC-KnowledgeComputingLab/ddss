@@ -27,7 +27,7 @@ def cli():
     if len(sys.argv) == 1:
         file = tempfile.NamedTemporaryFile()
         addr = f"sqlite+aiosqlite:///{file.name}"
-    elif len(sys.argv) == 2:
+    elif len(sys.argv) == 2 and sys.argv[1] not in ["--help", "-help", "-h", "/help", "/h", "/?"]:
         addr = sys.argv[1]
     else:
         print(f"Usage: {sys.argv[0]} [<database-addr>]")
