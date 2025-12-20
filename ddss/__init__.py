@@ -1,7 +1,9 @@
-from importlib.metadata import version, PackageNotFoundError
-
 try:
-    __version__ = version("ddss")
-except PackageNotFoundError:
-    # Package is not installed
-    __version__ = "unknown"
+    from ._version import version, __version__
+except ModuleNotFoundError:
+    try:
+        import importlib.metadata
+
+        version = __version__ = importlib.metadata.version("ddss")
+    except importlib.metadata.PackageNotFoundError:
+        version = __version__ = "0.0.0"

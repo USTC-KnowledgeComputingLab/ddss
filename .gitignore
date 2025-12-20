@@ -6,7 +6,7 @@ dist/
 wheels/
 *.egg-info
 
-# setuptools-scm version file
+# Setuptools-scm version file
 ddss/_version.py
 
 # Virtual environments
