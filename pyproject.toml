@@ -26,7 +26,8 @@ build-backend = "setuptools.build_meta"
 packages = ["ddss"]
 
 [tool.setuptools_scm]
-version_file = "ddss/_version.py"
+version_scheme = "no-guess-dev"
+fallback_version = "0.0.0"
 
 [project.scripts]
 ddss = "ddss.main:cli"
