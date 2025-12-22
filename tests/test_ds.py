@@ -21,10 +21,10 @@ async def temp_db():
 
 @pytest.mark.asyncio
 async def test_ds_simple_modus_ponens(temp_db):
-    """Test simple modus ponens: 'a -> b' with '|- a' produces '|- b'."""
+    """Test simple modus ponens: 'a => b' with '=> a' produces '=> b'."""
     addr, engine, session = temp_db
 
-    # Add initial facts: a -> b and |- a
+    # Add initial facts: a => b and => a
     async with session() as sess:
         sess.add(Facts(data="a\n----\nb\n"))
         sess.add(Facts(data="----\na\n"))
@@ -39,7 +39,7 @@ async def test_ds_simple_modus_ponens(temp_db):
     except asyncio.CancelledError:
         pass
 
-    # Check that the new fact '|- b' was created
+    # Check that the new fact '=> b' was created
     async with session() as sess:
         all_facts = await sess.scalars(select(Facts))
         facts_data = [f.data for f in all_facts]
@@ -49,10 +49,10 @@ async def test_ds_simple_modus_ponens(temp_db):
 
 @pytest.mark.asyncio
 async def test_ds_multi_premise_with_idea(temp_db):
-    """Test multi-premise rule: 'a, b -> c' with '|- a' produces 'b -> c' and idea '|- b'."""
+    """Test multi-premise rule: 'a, b => c' with '=> a' produces 'b => c' and idea '=> b'."""
     addr, engine, session = temp_db
 
-    # Add initial facts: a, b -> c and |- a
+    # Add initial facts: a, b => c and => a
     async with session() as sess:
         sess.add(Facts(data="a\nb\n----\nc\n"))
         sess.add(Facts(data="----\na\n"))
@@ -67,14 +67,14 @@ async def test_ds_multi_premise_with_idea(temp_db):
     except asyncio.CancelledError:
         pass
 
-    # Check that the new fact 'b -> c' was created
+    # Check that the new fact 'b => c' was created
     async with session() as sess:
         all_facts = await sess.scalars(select(Facts))
         facts_data = [f.data for f in all_facts]
 
     assert "b\n----\nc\n" in facts_data
 
-    # Check that the idea '|- b' was created
+    # Check that the idea '=> b' was created
     async with session() as sess:
         all_ideas = await sess.scalars(select(Ideas))
         ideas_data = [i.data for i in all_ideas]
@@ -87,7 +87,7 @@ async def test_ds_no_inference_without_matching_facts(temp_db):
     """Test that no inference occurs when facts don't match."""
     addr, engine, session = temp_db
 
-    # Add facts that don't match: a -> b and |- c
+    # Add facts that don't match: a => b and => c
     async with session() as sess:
         sess.add(Facts(data="a\n----\nb\n"))
         sess.add(Facts(data="----\nc\n"))
@@ -118,7 +118,7 @@ async def test_ds_multiple_inferences(temp_db):
     """Test multiple inference steps in sequence."""
     addr, engine, session = temp_db
 
-    # Add facts for chained inference: a -> b, b -> c, |- a
+    # Add facts for chained inference: a => b, b => c, => a
     async with session() as sess:
         sess.add(Facts(data="a\n----\nb\n"))
         sess.add(Facts(data="b\n----\nc\n"))
@@ -134,7 +134,7 @@ async def test_ds_multiple_inferences(temp_db):
     except asyncio.CancelledError:
         pass
 
-    # Check that both |- b and |- c were inferred
+    # Check that both => b and => c were inferred
     async with session() as sess:
         all_facts = await sess.scalars(select(Facts))
         facts_data = [f.data for f in all_facts]
@@ -165,7 +165,7 @@ async def test_ds_duplicate_facts_not_added(temp_db):
     """Test that duplicate facts are not added to the database."""
     addr, engine, session = temp_db
 
-    # Add facts that will produce a duplicate: a -> b twice with |- a
+    # Add facts that will produce a duplicate: a => b twice with => a
     async with session() as sess:
         sess.add(Facts(data="a\n----\nb\n"))
         sess.add(Facts(data="----\na\n"))
@@ -180,7 +180,7 @@ async def test_ds_duplicate_facts_not_added(temp_db):
     except asyncio.CancelledError:
         pass
 
-    # Count the facts - should have 3: original 2 + 1 inferred |- b
+    # Count the facts - should have 3: original 2 + 1 inferred => b
     async with session() as sess:
         all_facts = await sess.scalars(select(Facts))
         facts_list = list(all_facts)
