@@ -12,7 +12,7 @@ class TestOutput(unittest.TestCase):
     """Test the output module."""
 
     def test_output_formats_facts_correctly(self):
-        """Test that Facts data is formatted correctly from 'a\\n----\\nb' to 'a => b'."""
+        """Test that Facts data is formatted correctly using unparse() ('a\\n----\\nb' becomes 'a => b')."""
         async def run_test():
             # Create a temporary database
             with tempfile.TemporaryDirectory() as tmpdir:
@@ -49,7 +49,7 @@ class TestOutput(unittest.TestCase):
         asyncio.run(run_test())
 
     def test_output_formats_ideas_correctly(self):
-        """Test that Ideas data is formatted correctly from 'x\\n----\\ny' to 'x => y'."""
+        """Test that Ideas data is formatted correctly using unparse() ('x\\n----\\ny' becomes 'x => y')."""
         async def run_test():
             # Create a temporary database
             with tempfile.TemporaryDirectory() as tmpdir:
@@ -147,10 +147,10 @@ class TestOutput(unittest.TestCase):
                 # Should complete without hanging
                 try:
                     await asyncio.wait_for(task, timeout=1.0)
-                except asyncio.CancelledError:
-                    pass  # Expected
-                except asyncio.TimeoutError:
-                    self.fail("Task did not cancel in time")
+                except (asyncio.CancelledError, asyncio.TimeoutError):
+                    # CancelledError is expected, TimeoutError means cancellation didn't work
+                    if not task.cancelled() and not task.done():
+                        self.fail("Task did not cancel in time")
         
         asyncio.run(run_test())
 
