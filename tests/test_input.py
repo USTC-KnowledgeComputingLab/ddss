@@ -1,12 +1,10 @@
 import asyncio
 import tempfile
 import pathlib
-from unittest.mock import AsyncMock, patch, MagicMock
-
+from unittest.mock import patch, AsyncMock, MagicMock
 import pytest
 import pytest_asyncio
 from sqlalchemy import select
-
 from ddss.orm import initialize_database, Facts, Ideas
 from ddss.input import main
 
