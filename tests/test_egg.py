@@ -20,102 +20,143 @@ async def temp_db():
 
 
 @pytest.mark.asyncio
-async def test_egg_processes_ideas_with_matching_facts(temp_db):
-    """Test that egg processes Ideas and generates Facts when there are matching facts.
-
-    Uses equality format: '----\\n(binary == a b)\\n' to test egraph matching.
-    This format is recognized by rule_is_equality() in utility.py.
-    """
+async def test_egg_symmetry_ab_to_ba(temp_db):
+    """Test symmetry: given fact a=b and idea b=a, egg should produce fact b=a."""
     addr, engine, session = temp_db
 
-    # Add test data - a fact and an idea that should match
+    # Add fact a=b
     async with session() as sess:
-        # Add a fact that defines an equality (format: '----\n(binary == a b)\n')
         sess.add(Facts(data="----\n(binary == a b)\n"))
-        # Add an idea that should match the fact
-        sess.add(Ideas(data="----\n(binary == a b)\n"))
-        await sess.commit()
-
-    # Run the main function with a timeout to avoid infinite loop
-    task = asyncio.create_task(main(addr, engine, session))
-    await asyncio.sleep(0.3)  # Give it time to process
-    task.cancel()
-    try:
-        await task
-    except asyncio.CancelledError:
-        pass
-
-    # Verify that the idea was processed (it should be removed from pool when matched)
-    # The fact count should remain the same or increase
-    async with session() as sess:
-        facts = await sess.scalars(select(Facts))
-        fact_count = len(facts.all())
-        assert fact_count >= 1
-
-
-@pytest.mark.asyncio
-async def test_egg_adds_facts_from_search_results(temp_db):
-    """Test that egg adds new Facts generated from search results.
-
-    Uses simple fact format: '----\\nx\\n' to test basic fact processing.
-    This format is recognized by rule_is_fact() in utility.py.
-    """
-    addr, engine, session = temp_db
-
-    # Add test data
-    async with session() as sess:
-        # Add a base fact (format: '----\nx\n')
-        sess.add(Facts(data="----\nx\n"))
-        # Add an idea that won't immediately match (will stay in pool)
-        sess.add(Ideas(data="----\ny\n"))
+        sess.add(Ideas(data="----\n(binary == b a)\n"))
         await sess.commit()
 
     # Run the main function with a timeout
     task = asyncio.create_task(main(addr, engine, session))
-    await asyncio.sleep(0.3)  # Give it time to process
+    await asyncio.sleep(0.3)
     task.cancel()
     try:
         await task
     except asyncio.CancelledError:
         pass
 
-    # Verify that facts were processed
+    # Verify that fact b=a was produced
     async with session() as sess:
         facts = await sess.scalars(select(Facts))
-        fact_list = facts.all()
-        assert len(fact_list) >= 1
+        fact_data = [f.data for f in facts.all()]
+        assert "----\n(binary == b a)\n" in fact_data
 
 
 @pytest.mark.asyncio
-async def test_egg_with_multiple_ideas_and_facts(temp_db):
-    """Test that egg handles multiple Ideas and Facts correctly."""
+async def test_egg_transitivity_abc(temp_db):
+    """Test transitivity: given a=b, b=c, and idea a=c, egg should produce a=c."""
     addr, engine, session = temp_db
 
-    # Add test data
+    # Add facts a=b and b=c
     async with session() as sess:
-        sess.add(Facts(data="----\na\n"))
-        sess.add(Facts(data="----\nb\n"))
-        sess.add(Ideas(data="----\nx\n"))
-        sess.add(Ideas(data="----\ny\n"))
+        sess.add(Facts(data="----\n(binary == a b)\n"))
+        sess.add(Facts(data="----\n(binary == b c)\n"))
+        sess.add(Ideas(data="----\n(binary == a c)\n"))
         await sess.commit()
 
-    # Run the main function with a timeout
+    # Run the main function
     task = asyncio.create_task(main(addr, engine, session))
-    await asyncio.sleep(0.3)  # Give it time to process
+    await asyncio.sleep(0.3)
     task.cancel()
     try:
         await task
     except asyncio.CancelledError:
         pass
 
-    # Verify that the system processed the data
+    # Verify that fact a=c was produced
     async with session() as sess:
-        ideas = await sess.scalars(select(Ideas))
         facts = await sess.scalars(select(Facts))
-        idea_list = ideas.all()
-        fact_list = facts.all()
-        assert len(idea_list) == 2  # Ideas should remain
-        assert len(fact_list) >= 2  # Facts should be present
+        fact_data = [f.data for f in facts.all()]
+        assert "----\n(binary == a c)\n" in fact_data
+
+
+@pytest.mark.asyncio
+async def test_egg_congruence_fx_fy(temp_db):
+    """Test congruence: given x=y, expect f(x)=f(y), egg should produce it."""
+    addr, engine, session = temp_db
+
+    # Add fact x=y and idea f(x)=f(y)
+    async with session() as sess:
+        sess.add(Facts(data="----\n(binary == x y)\n"))
+        sess.add(Ideas(data="----\n(binary == (unary f x) (unary f y))\n"))
+        await sess.commit()
+
+    # Run the main function
+    task = asyncio.create_task(main(addr, engine, session))
+    await asyncio.sleep(0.3)
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
+
+    # Verify that fact f(x)=f(y) was produced
+    async with session() as sess:
+        facts = await sess.scalars(select(Facts))
+        fact_data = [f.data for f in facts.all()]
+        assert "----\n(binary == (unary f x) (unary f y))\n" in fact_data
+
+
+@pytest.mark.asyncio
+async def test_egg_substitution_fx_with_xy(temp_db):
+    """Test substitution: given f(x) and x=y, expect f(y) can be satisfied."""
+    addr, engine, session = temp_db
+
+    # Add fact f(x) and x=y, then idea f(y)
+    async with session() as sess:
+        sess.add(Facts(data="----\n(unary f x)\n"))
+        sess.add(Facts(data="----\n(binary == x y)\n"))
+        sess.add(Ideas(data="----\n(unary f y)\n"))
+        await sess.commit()
+
+    # Run the main function
+    task = asyncio.create_task(main(addr, engine, session))
+    await asyncio.sleep(0.3)
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
+
+    # Verify that the idea was satisfied (removed from pool or fact produced)
+    async with session() as sess:
+        facts = await sess.scalars(select(Facts))
+        fact_data = [f.data for f in facts.all()]
+        # The idea should be satisfied because f(x) and x=y implies f(y)
+        assert "----\n(unary f y)\n" in fact_data
+
+
+@pytest.mark.asyncio
+async def test_egg_substitution_fx_xyz(temp_db):
+    """Test substitution chain: given x=y, y=z, f(x), expect f(z) can be satisfied."""
+    addr, engine, session = temp_db
+
+    # Add facts x=y, y=z, f(x), then idea f(z)
+    async with session() as sess:
+        sess.add(Facts(data="----\n(binary == x y)\n"))
+        sess.add(Facts(data="----\n(binary == y z)\n"))
+        sess.add(Facts(data="----\n(unary f x)\n"))
+        sess.add(Ideas(data="----\n(unary f z)\n"))
+        await sess.commit()
+
+    # Run the main function
+    task = asyncio.create_task(main(addr, engine, session))
+    await asyncio.sleep(0.3)
+    task.cancel()
+    try:
+        await task
+    except asyncio.CancelledError:
+        pass
+
+    # Verify that f(z) was produced
+    async with session() as sess:
+        facts = await sess.scalars(select(Facts))
+        fact_data = [f.data for f in facts.all()]
+        assert "----\n(unary f z)\n" in fact_data
 
 
 @pytest.mark.asyncio
@@ -125,87 +166,11 @@ async def test_egg_cancellation(temp_db):
 
     # Run the main function and cancel it
     task = asyncio.create_task(main(addr, engine, session))
-    await asyncio.sleep(0.1)  # Let it start
+    await asyncio.sleep(0.1)
     task.cancel()
 
     # Should complete without hanging
     try:
         await task
     except asyncio.CancelledError:
-        pass  # Expected - cancellation worked
-
-
-@pytest.mark.asyncio
-async def test_egg_loop_continues_processing(temp_db):
-    """Test that egg continues looping and processing new data."""
-    addr, engine, session = temp_db
-
-    # Add initial data
-    async with session() as sess:
-        sess.add(Facts(data="----\ninitial\n"))
-        await sess.commit()
-
-    # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
-    await asyncio.sleep(0.2)  # Let it process initial data
-
-    # Add more data while it's running
-    async with session() as sess:
-        sess.add(Ideas(data="----\nnew_idea\n"))
-        await sess.commit()
-
-    await asyncio.sleep(0.2)  # Give it time to process new data
-    task.cancel()
-    try:
-        await task
-    except asyncio.CancelledError:
         pass
-
-    # Verify that new data was processed
-    async with session() as sess:
-        ideas_result = await sess.scalars(select(Ideas))
-        idea_list = ideas_result.all()
-        assert len(idea_list) >= 1
-
-
-@pytest.mark.asyncio
-async def test_egg_incremental_processing(temp_db):
-    """Test that egg only processes new Facts and Ideas (using id > max_fact/max_idea)."""
-    addr, engine, session = temp_db
-
-    # Add initial data
-    async with session() as sess:
-        sess.add(Facts(data="----\nfact1\n"))
-        sess.add(Ideas(data="----\nidea1\n"))
-        await sess.commit()
-
-    # Run the main function briefly
-    task = asyncio.create_task(main(addr, engine, session))
-    await asyncio.sleep(0.2)
-    task.cancel()
-    try:
-        await task
-    except asyncio.CancelledError:
-        pass
-
-    # Add more data with higher IDs
-    async with session() as sess:
-        sess.add(Facts(data="----\nfact2\n"))
-        sess.add(Ideas(data="----\nidea2\n"))
-        await sess.commit()
-
-    # Run again - it should process the new data
-    task = asyncio.create_task(main(addr, engine, session))
-    await asyncio.sleep(0.2)
-    task.cancel()
-    try:
-        await task
-    except asyncio.CancelledError:
-        pass
-
-    # Verify all data is in database
-    async with session() as sess:
-        facts_result = await sess.scalars(select(Facts))
-        ideas_result = await sess.scalars(select(Ideas))
-        assert len(facts_result.all()) >= 2
-        assert len(ideas_result.all()) >= 2
