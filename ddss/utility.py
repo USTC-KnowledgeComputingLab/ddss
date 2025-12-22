@@ -1,4 +1,4 @@
-from apyds import Term
+from apyds import Term, Rule
 
 
 def rule_get_idea(data):
@@ -42,14 +42,31 @@ def term_build_rule(data: str) -> str:
     return f"----\n{data}\n"
 
 
+def conclusion_build_rule(conclusion: Term) -> Rule:
+    """Build a Rule from a conclusion Term (no premises)"""
+    return Rule(f"----\n{conclusion}\n")
+
+
 # New Term/Rule-based helper functions
 def term_is_equality(term: Term) -> bool:
     """Check if a Term represents an equality (binary ==)"""
-    return len(term.term) >= 2 and str(term.term[0]) == "binary" and str(term.term[1]) == "=="
+    return len(term.term) == 4 and str(term.term[0]) == "binary" and str(term.term[1]) == "=="
 
 
 def term_get_equality_pair(term: Term) -> tuple[Term, Term]:
-    """Get the LHS and RHS terms from an equality Term"""
+    """Get the LHS and RHS terms from an equality Term.
+    
+    Args:
+        term: A Term representing an equality (binary == lhs rhs)
+        
+    Returns:
+        A tuple of (lhs, rhs) Term objects
+        
+    Raises:
+        IndexError: If term is not an equality with the expected structure
+    """
+    if not term_is_equality(term):
+        raise ValueError(f"Term is not an equality: {term}")
     return term.term[2], term.term[3]
 
 

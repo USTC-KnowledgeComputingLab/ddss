@@ -6,6 +6,7 @@ from .utility import (
     term_is_equality,
     term_get_equality_pair,
     term_build_equality,
+    conclusion_build_rule,
 )
 
 
@@ -84,7 +85,7 @@ class Search:
         for target in self.pairs:
             if unification := target @ conclusion:
                 result = target.ground(unification, scope="1")
-                yield Rule(f"----\n{result}\n")
+                yield conclusion_build_rule(result)
 
     def _execute_fact(self, rule: Rule) -> typing.Iterator[Rule]:
         if len(rule) != 0:
@@ -99,5 +100,7 @@ class Search:
             for target in self.pairs:
                 if unification := target @ query:
                     result = target.ground(unification, scope="1")
-                    # Extract the RHS of the equality (result.term[2] is the second argument of ==)
-                    yield Rule(f"----\n{result.term[2]}\n")
+                    # Extract the LHS of the equality result
+                    # The query is (binary == conclusion fact), and after unification & grounding
+                    # result.term[2] gives us the grounded first argument
+                    yield conclusion_build_rule(result.term[2])
