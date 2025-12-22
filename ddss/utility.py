@@ -40,3 +40,19 @@ def equality_build_term(lhs: str, rhs: str) -> str:
 
 def term_build_rule(data: str) -> str:
     return f"----\n{data}\n"
+
+
+# New Term/Rule-based helper functions
+def term_is_equality(term: Term) -> bool:
+    """Check if a Term represents an equality (binary ==)"""
+    return len(term.term) >= 2 and str(term.term[0]) == "binary" and str(term.term[1]) == "=="
+
+
+def term_get_equality_pair(term: Term) -> tuple[Term, Term]:
+    """Get the LHS and RHS terms from an equality Term"""
+    return term.term[2], term.term[3]
+
+
+def term_build_equality(lhs: Term, rhs: Term) -> Term:
+    """Build an equality Term from two terms"""
+    return Term(f"(binary == {lhs} {rhs})")

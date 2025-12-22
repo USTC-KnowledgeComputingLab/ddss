@@ -1,15 +1,11 @@
 from __future__ import annotations
 import typing
-from apyds import Term
+from apyds import Term, Rule
 from apyds_egg import EGraph as ApydsEGraph, EClassId
 from .utility import (
-    rule_is_fact,
-    rule_get_fact,
-    rule_is_equality,
-    rule_get_equality,
-    equality_build_rule,
-    equality_build_term,
-    term_build_rule,
+    term_is_equality,
+    term_get_equality_pair,
+    term_build_equality,
 )
 
 
@@ -18,17 +14,18 @@ class EGraph:
         self.core = ApydsEGraph()
         self.mapping: dict[str, EClassId] = {}
 
-    def _get_or_add(self, data: str) -> EClassId:
-        if data not in self.mapping:
-            self.mapping[data] = self.core.add(Term(data))
-        return self.mapping[data]
+    def _get_or_add(self, term: Term) -> EClassId:
+        term_str = str(term)
+        if term_str not in self.mapping:
+            self.mapping[term_str] = self.core.add(term)
+        return self.mapping[term_str]
 
-    def set_equality(self, lhs: str, rhs: str) -> None:
+    def set_equality(self, lhs: Term, rhs: Term) -> None:
         lhs_id = self._get_or_add(lhs)
         rhs_id = self._get_or_add(rhs)
         self.core.merge(lhs_id, rhs_id)
 
-    def get_equality(self, lhs: str, rhs: str) -> bool:
+    def get_equality(self, lhs: Term, rhs: Term) -> bool:
         lhs_id = self._get_or_add(lhs)
         rhs_id = self._get_or_add(rhs)
         return self.core.find(lhs_id) == self.core.find(rhs_id)
@@ -37,63 +34,70 @@ class EGraph:
 class Search:
     def __init__(self) -> None:
         self.egraph = EGraph()
-        self.terms = set()
-        self.facts = set()
-        self.pairs = set()
+        self.terms: set[Term] = set()
+        self.facts: set[Term] = set()
+        self.pairs: set[Term] = set()
 
     def rebuild(self) -> None:
         self.egraph.core.rebuild()
         for lhs in self.terms:
             for rhs in self.terms:
                 if self.egraph.get_equality(lhs, rhs):
-                    equality = Term(equality_build_term(lhs, rhs))
+                    equality = term_build_equality(lhs, rhs)
                     self.pairs.add(equality)
 
-    def add(self, data: str) -> None:
-        self._add_expr(data)
-        self._add_fact(data)
+    def add(self, rule: Rule) -> None:
+        self._add_expr(rule)
+        self._add_fact(rule)
 
-    def _add_expr(self, data: str) -> None:
-        if not rule_is_equality(data):
+    def _add_expr(self, rule: Rule) -> None:
+        if len(rule) != 0:
             return
-        lhs, rhs = rule_get_equality(data)
+        conclusion = rule.conclusion
+        if not term_is_equality(conclusion):
+            return
+        lhs, rhs = term_get_equality_pair(conclusion)
         self.terms.add(lhs)
         self.terms.add(rhs)
         self.egraph.set_equality(lhs, rhs)
 
-    def _add_fact(self, data: str) -> None:
-        if not rule_is_fact(data):
+    def _add_fact(self, rule: Rule) -> None:
+        if len(rule) != 0:
             return
-        fact = rule_get_fact(data)
-        self.terms.add(fact)
-        self.facts.add(fact)
+        conclusion = rule.conclusion
+        self.terms.add(conclusion)
+        self.facts.add(conclusion)
 
-    def execute(self, data: str) -> typing.Iterator[str]:
-        yield from self._execute_expr(data)
-        yield from self._execute_fact(data)
+    def execute(self, rule: Rule) -> typing.Iterator[Rule]:
+        yield from self._execute_expr(rule)
+        yield from self._execute_fact(rule)
 
-    def _execute_expr(self, data: str) -> typing.Iterator[str]:
-        if not rule_is_equality(data):
+    def _execute_expr(self, rule: Rule) -> typing.Iterator[Rule]:
+        if len(rule) != 0:
             return
-        lhs, rhs = rule_get_equality(data)
+        conclusion = rule.conclusion
+        if not term_is_equality(conclusion):
+            return
+        lhs, rhs = term_get_equality_pair(conclusion)
         if self.egraph.get_equality(lhs, rhs):
-            yield equality_build_rule(lhs, rhs)
-        query = Term(rule_get_fact(data))
+            yield rule
         for target in self.pairs:
-            if unification := target @ query:
+            if unification := target @ conclusion:
                 result = target.ground(unification, scope="1")
-                yield term_build_rule(result)
+                yield Rule(f"----\n{result}\n")
 
-    def _execute_fact(self, data: str) -> typing.Iterator[str]:
-        if not rule_is_fact(data):
+    def _execute_fact(self, rule: Rule) -> typing.Iterator[Rule]:
+        if len(rule) != 0:
             return
-        idea = rule_get_fact(data)
+        conclusion = rule.conclusion
         for fact in self.facts:
-            if self.egraph.get_equality(idea, fact):
-                yield data
+            if self.egraph.get_equality(conclusion, fact):
+                yield rule
+                return
         for fact in self.facts:
-            query = Term(equality_build_term(idea, fact))
+            query = term_build_equality(conclusion, fact)
             for target in self.pairs:
                 if unification := target @ query:
                     result = target.ground(unification, scope="1")
-                    yield term_build_rule(result.term[2])
+                    # Extract the RHS of the equality (result.term[2] is the second argument of ==)
+                    yield Rule(f"----\n{result.term[2]}\n")

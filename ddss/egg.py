@@ -1,5 +1,6 @@
 import sys
 import asyncio
+from apyds import Rule
 from sqlalchemy import select
 from .orm import initialize_database, insert_or_ignore, Facts, Ideas
 from .egraph import Search
@@ -25,14 +26,16 @@ async def main(addr, engine=None, session=None):
                     pool.append(i.data)
                 for i in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
                     max_fact = max(max_fact, i.id)
-                    search.add(i.data)
+                    search.add(Rule(i.data))
                 search.rebuild()
                 tasks = []
                 next_pool = []
                 for i in pool:
-                    for o in search.execute(i):
-                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, o)))
-                        if i == o:
+                    idea_rule = Rule(i)
+                    for o in search.execute(idea_rule):
+                        o_str = str(o)
+                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, o_str)))
+                        if i == o_str:
                             break
                     else:
                         next_pool.append(i)
