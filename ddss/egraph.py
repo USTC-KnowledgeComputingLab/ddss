@@ -27,7 +27,6 @@ class EGraph:
         lhs_id = self._get_or_add(lhs)
         rhs_id = self._get_or_add(rhs)
         self.core.merge(lhs_id, rhs_id)
-        self.core.rebuild()
 
     def get_equality(self, lhs: str, rhs: str) -> bool:
         lhs_id = self._get_or_add(lhs)
@@ -42,7 +41,8 @@ class Search:
         self.facts = set()
         self.pairs = set()
 
-    def build_pairs(self) -> None:
+    def rebuild(self) -> None:
+        self.egraph.core.rebuild()
         for lhs in self.terms:
             for rhs in self.terms:
                 if self.egraph.get_equality(lhs, rhs):
