@@ -59,17 +59,26 @@ class Search:
         self.egraph: _EGraph = _EGraph()
         self.terms: set[Term] = set()
         self.facts: set[Term] = set()
+        self.newly_added_terms: set[Term] = set()
+        self.newly_added_facts: set[Term] = set()
         self.fact_equiv_cache: dict[Term, set[Term]] = defaultdict(set)
 
     def rebuild(self) -> None:
         self.egraph.rebuild()
-        self.fact_equiv_cache.clear()
         for fact in self.facts:
-            equiv_terms = set()
+            for term in self.newly_added_terms:
+                if self.egraph.get_equality(fact, term):
+                    self.fact_equiv_cache[fact].add(term)
+        for fact in self.newly_added_facts:
             for term in self.terms:
                 if self.egraph.get_equality(fact, term):
-                    equiv_terms.add(term)
-            self.fact_equiv_cache[fact] = equiv_terms
+                    self.fact_equiv_cache[fact].add(term)
+        for fact in self.newly_added_facts:
+            for term in self.newly_added_terms:
+                if self.egraph.get_equality(fact, term):
+                    self.fact_equiv_cache[fact].add(term)
+        self.newly_added_terms.clear()
+        self.newly_added_facts.clear()
 
     def add(self, data: Rule) -> None:
         self._add_expr(data)
@@ -81,7 +90,9 @@ class Search:
             return
         lhs, rhs = lhs_rhs
         self.terms.add(lhs)
+        self.newly_added_terms.add(lhs)
         self.terms.add(rhs)
+        self.newly_added_terms.add(rhs)
         self.egraph.set_equality(lhs, rhs)
 
     def _add_fact(self, data: Rule) -> None:
@@ -89,7 +100,9 @@ class Search:
             return
         term = data.conclusion
         self.terms.add(term)
+        self.newly_added_terms.add(term)
         self.facts.add(term)
+        self.newly_added_facts.add(term)
 
     def execute(self, data: Rule) -> typing.Iterator[Rule]:
         yield from self._execute_expr(data)
