@@ -15,13 +15,13 @@ async def main(addr, engine=None, session=None):
             data = line.strip()
             if not data:
                 continue
-            
+
             try:
                 ds = parse(data)
             except Exception as e:
                 print(f"error: {e}", file=sys.stderr)
                 continue
-            
+
             async with session() as sess:
                 await insert_or_ignore(sess, Facts, ds)
                 if idea := str_rule_get_str_idea(ds):

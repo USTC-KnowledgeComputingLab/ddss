@@ -27,7 +27,7 @@ async def test_load_valid_fact(temp_db):
 
     # Mock stdin with valid input
     mock_stdin = StringIO("a => b\n")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
@@ -46,7 +46,7 @@ async def test_load_generates_idea(temp_db):
 
     # Mock stdin with valid input
     mock_stdin = StringIO("a => b\n")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
@@ -70,7 +70,7 @@ async def test_load_invalid_input_handling(temp_db, capsys):
 
     # Mock stdin with invalid input
     mock_stdin = StringIO("=>\n")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
@@ -92,7 +92,7 @@ async def test_load_empty_input_skipped(temp_db):
 
     # Mock stdin with empty lines and valid input
     mock_stdin = StringIO("\n  \na => b\n")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
@@ -111,7 +111,7 @@ async def test_load_multiple_entries(temp_db):
 
     # Mock stdin with multiple valid inputs
     mock_stdin = StringIO("a => b\nc => d\nsimple\n")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
@@ -142,7 +142,7 @@ async def test_load_mixed_valid_and_invalid(temp_db, capsys):
 
     # Mock stdin with mixed valid and invalid inputs
     mock_stdin = StringIO("a => b\n=>\nc => d\n")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
@@ -167,7 +167,7 @@ async def test_load_empty_stdin(temp_db):
 
     # Mock empty stdin
     mock_stdin = StringIO("")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
@@ -190,7 +190,7 @@ async def test_load_duplicate_entries(temp_db):
 
     # Try to load the same entry again
     mock_stdin = StringIO("a => b\n")
-    
+
     with patch("sys.stdin", mock_stdin):
         await main(addr, engine, session)
 
