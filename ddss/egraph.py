@@ -173,7 +173,7 @@ class Search:
                 result.add(candidate)
         return result
 
-    def _group_by_equivalence_class(self, terms: set[Term]) -> list[set[Term]]:
+    def _group_by_equivalence_class(self, terms: set[Term]) -> typing.Iterator[set[Term]]:
         if not terms:
             return []
 
@@ -184,4 +184,4 @@ class Search:
         eid_to_terms: dict[EClassId, set[Term]] = defaultdict(set)
         for term, eid in term_to_eid.items():
             eid_to_terms[eid].add(term)
-        return list(eid_to_terms.values())
+        return eid_to_terms.values()
