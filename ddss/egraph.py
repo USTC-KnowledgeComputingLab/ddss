@@ -61,22 +61,14 @@ class Search:
         self.facts: set[Term] = set()
         self.newly_added_terms: set[Term] = set()
         self.newly_added_facts: set[Term] = set()
-        self.fact_equiv_cache: dict[Term, set[Term]] = defaultdict(set)
+        self.fact_matching_cache: dict[Term, set[Term]] = defaultdict(set)
 
     def rebuild(self) -> None:
         self.egraph.rebuild()
         for fact in self.facts:
-            for term in self.newly_added_terms:
-                if self.egraph.get_equality(fact, term):
-                    self.fact_equiv_cache[fact].add(term)
+            self.fact_matching_cache[fact] |= self._collect_matching_candidates(fact, self.newly_added_terms)
         for fact in self.newly_added_facts:
-            for term in self.terms:
-                if self.egraph.get_equality(fact, term):
-                    self.fact_equiv_cache[fact].add(term)
-        for fact in self.newly_added_facts:
-            for term in self.newly_added_terms:
-                if self.egraph.get_equality(fact, term):
-                    self.fact_equiv_cache[fact].add(term)
+            self.fact_matching_cache[fact] |= self._collect_matching_candidates(fact, self.terms)
         self.newly_added_terms.clear()
         self.newly_added_facts.clear()
 
@@ -159,7 +151,7 @@ class Search:
         idea_groups = self._group_by_equivalence_class(idea_pool)
 
         for fact in self.facts:
-            fact_pool = self.fact_equiv_cache[fact]
+            fact_pool = self.fact_matching_cache[fact]
             if not fact_pool:
                 continue
 
