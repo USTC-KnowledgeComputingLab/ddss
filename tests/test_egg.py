@@ -260,13 +260,20 @@ async def test_egg_transitivity_with_variables(temp_db):
 
 @pytest.mark.asyncio
 async def test_egg_congruence_with_variables(temp_db):
-    """Test congruence with variables: given x=y, expect f(`z, x)=f(`z, y)."""
+    """Test congruence with variables: given a(`x)=b(`x), derive f(a(t))=f(b(t)).
+    
+    This tests that variable patterns enable congruence on nested structures:
+    - Variable fact a(`x)=b(`x) allows deriving concrete equality a(t)=b(t)
+    - Concrete equality a(t)=b(t) enables congruence to derive f(a(t))=f(b(t))
+    """
     addr, engine, session = temp_db
 
-    # Add fact x=y and idea f(`z, x)=f(`z, y)
+    # Add variable equality fact
     async with session() as sess:
-        sess.add(Facts(data="----\n(binary == x y)\n"))
-        sess.add(Ideas(data="----\n(binary == (binary f `z x) (binary f `z y))\n"))
+        sess.add(Facts(data="----\n(binary == (unary a `x) (unary b `x))\n"))
+        # Add ideas to test the derivation chain
+        sess.add(Ideas(data="----\n(binary == (unary a t) (unary b t))\n"))  # concrete instance
+        sess.add(Ideas(data="----\n(binary == (unary f (unary a t)) (unary f (unary b t)))\n"))  # congruence
         await sess.commit()
 
     # Run the main function
@@ -278,25 +285,33 @@ async def test_egg_congruence_with_variables(temp_db):
     except asyncio.CancelledError:
         pass
 
-    # Verify that fact was produced
+    # Verify that both facts were produced
     async with session() as sess:
         facts = await sess.scalars(select(Facts))
         fact_data = [f.data for f in facts.all()]
-        assert "----\n(binary == (binary f `z x) (binary f `z y))\n" in fact_data
+        # First, a(t)=b(t) should be derived from a(`x)=b(`x)
+        assert "----\n(binary == (unary a t) (unary b t))\n" in fact_data
+        # Then, f(a(t))=f(b(t)) should be derived via congruence
+        assert "----\n(binary == (unary f (unary a t)) (unary f (unary b t)))\n" in fact_data
 
 
 @pytest.mark.asyncio
 async def test_egg_substitution_with_variables(temp_db):
-    """Test substitution with variables: given fact f(`x) with a variable argument
-    and equality x=y, the system can derive f(y) by unifying the variable pattern
-    f(`x) with f(y) where `x matches y, then checking if the resulting equality holds."""
+    """Test substitution with variables: given f(a(`x)) and a(`x)=b(`x), derive f(b(t)).
+    
+    This tests that variable patterns enable substitution in nested structures:
+    - Facts f(a(`x)) and a(`x)=b(`x) allow deriving f(b(`x)) via e-graph equality
+    - Variable fact f(b(`x)) allows deriving concrete instance f(b(t))
+    """
     addr, engine, session = temp_db
 
-    # Add fact f(`x) and x=y, then idea f(y)
+    # Add facts with variables
     async with session() as sess:
-        sess.add(Facts(data="----\n(unary f `x)\n"))
-        sess.add(Facts(data="----\n(binary == x y)\n"))
-        sess.add(Ideas(data="----\n(unary f y)\n"))
+        sess.add(Facts(data="----\n(unary f (unary a `x))\n"))
+        sess.add(Facts(data="----\n(binary == (unary a `x) (unary b `x))\n"))
+        # Add ideas to test the derivation chain
+        sess.add(Ideas(data="----\n(unary f (unary b `x))\n"))  # substitution via equality
+        sess.add(Ideas(data="----\n(unary f (unary b t))\n"))  # concrete instance
         await sess.commit()
 
     # Run the main function
@@ -308,11 +323,14 @@ async def test_egg_substitution_with_variables(temp_db):
     except asyncio.CancelledError:
         pass
 
-    # Verify that the idea was satisfied
+    # Verify that both facts were produced
     async with session() as sess:
         facts = await sess.scalars(select(Facts))
         fact_data = [f.data for f in facts.all()]
-        assert "----\n(unary f y)\n" in fact_data
+        # First, f(b(`x)) should be derived via substitution
+        assert "----\n(unary f (unary b `x))\n" in fact_data
+        # Then, f(b(t)) should be derived as a concrete instance
+        assert "----\n(unary f (unary b t))\n" in fact_data
 
 
 @pytest.mark.asyncio
