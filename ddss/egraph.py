@@ -54,18 +54,11 @@ class Search:
         self.egraph: _EGraph = _EGraph()
         self.terms: set[Term] = set()
         self.facts: set[Term] = set()
-        self.pairs: set[Term] = set()
         # Cache for optimization: maps fact to its equivalent terms
         self.fact_equiv_cache: dict[Term, set[Term]] = {}
 
     def rebuild(self) -> None:
         self.egraph.rebuild()
-        # Build pairs as before
-        for lhs in self.terms:
-            for rhs in self.terms:
-                if self.egraph.get_equality(lhs, rhs):
-                    equality = _build_lhs_rhs_to_term(lhs, rhs)
-                    self.pairs.add(equality)
 
         # Build fact equivalence cache for optimization
         self.fact_equiv_cache.clear()
