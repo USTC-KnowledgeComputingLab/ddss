@@ -203,7 +203,9 @@ async def test_egg_cancellation(temp_db):
 # Variable-based tests
 @pytest.mark.asyncio
 async def test_egg_symmetry_with_variables(temp_db):
-    """Test symmetry with variables: given a(`x)=b(`x) and idea b(t)=a(t), should produce b(t)=a(t)."""
+    """Test symmetry with variables: given variable equality a(`x)=b(`x), 
+    the system can derive the symmetric concrete instance b(t)=a(t) by 
+    unifying the variable pattern with concrete value t."""
     addr, engine, session = temp_db
 
     # Add fact a(`x)=b(`x) with variable
@@ -285,7 +287,9 @@ async def test_egg_congruence_with_variables(temp_db):
 
 @pytest.mark.asyncio
 async def test_egg_substitution_with_variables(temp_db):
-    """Test substitution with variables: given f(`x) and x=y, expect f(y) can be satisfied."""
+    """Test substitution with variables: given fact f(`x) with a variable argument
+    and equality x=y, the system can derive f(y) by unifying the variable pattern
+    f(`x) with f(y) where `x matches y, then checking if the resulting equality holds."""
     addr, engine, session = temp_db
 
     # Add fact f(`x) and x=y, then idea f(y)
