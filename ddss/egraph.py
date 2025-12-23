@@ -181,7 +181,7 @@ class Search:
         for term in terms:
             term_to_eid[term] = self.egraph.find(term)
 
-        eid_to_terms: dict[EClassId, list[Term]] = defaultdict(set)
+        eid_to_terms: dict[EClassId, set[Term]] = defaultdict(set)
         for term, eid in term_to_eid.items():
             eid_to_terms[eid].add(term)
         return list(eid_to_terms.values())
