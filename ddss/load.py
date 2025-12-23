@@ -10,23 +10,23 @@ async def main(addr, engine=None, session=None):
         engine, session = await initialize_database(addr)
 
     try:
-        # Read all lines from stdin
-        for line in sys.stdin:
-            data = line.strip()
-            if not data:
-                continue
+        async with session() as sess:
+            # Read all lines from stdin
+            for line in sys.stdin:
+                data = line.strip()
+                if not data:
+                    continue
 
-            try:
-                ds = parse(data)
-            except Exception as e:
-                print(f"error: {e}", file=sys.stderr)
-                continue
+                try:
+                    ds = parse(data)
+                except Exception as e:
+                    print(f"error: {e}", file=sys.stderr)
+                    continue
 
-            async with session() as sess:
                 await insert_or_ignore(sess, Facts, ds)
                 if idea := str_rule_get_str_idea(ds):
                     await insert_or_ignore(sess, Ideas, idea)
-                await sess.commit()
+            await sess.commit()
     finally:
         await engine.dispose()
 
