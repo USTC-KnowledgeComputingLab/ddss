@@ -97,10 +97,21 @@ class Search:
         self.facts.add(term)
 
     def _collect_matching_candidates(self, pattern: Term, candidates: set[Term]) -> list[Term]:
-        """Collect all candidates that can potentially match the pattern."""
+        """Collect all candidates that can potentially match the pattern.
+        
+        Uses the @ operator (unification) to check if pattern can match each candidate.
+        The @ operator attempts to unify two terms, returning a substitution if successful.
+        
+        Args:
+            pattern: The pattern term to match against
+            candidates: Set of candidate terms to check
+            
+        Returns:
+            List of candidates that can unify with the pattern
+        """
         result = []
         for candidate in candidates:
-            if pattern @ candidate:
+            if pattern @ candidate:  # Unification check
                 result.append(candidate)
         return result
 
@@ -144,8 +155,8 @@ class Search:
         # 检查是否已经存在严格相等的事实
         if self.egraph.get_equality(lhs, rhs):
             yield data
-            return
         
+        # 尝试处理含有变量的情况
         # Optimization: Collect candidates that can match lhs and rhs
         lhs_pool = self._collect_matching_candidates(lhs, self.terms)
         rhs_pool = self._collect_matching_candidates(rhs, self.terms)
@@ -162,6 +173,7 @@ class Search:
             for rhs_group in rhs_groups:
                 # Check if these groups are equivalent
                 if lhs_group and rhs_group:
+                    # Use the first element as representative of the equivalence class
                     if self.egraph.get_equality(lhs_group[0], rhs_group[0]):
                         # Try to match within this equivalence class
                         for x in lhs_group:
@@ -190,8 +202,9 @@ class Search:
         for fact in self.facts:
             if self.egraph.get_equality(idea, fact):
                 yield data
-                return
+                break
         
+        # 尝试处理含有变量的情况
         # Optimization: Collect candidates that can match the idea
         idea_pool = self._collect_matching_candidates(idea, self.terms)
         
@@ -216,15 +229,17 @@ class Search:
                 for fact_group in fact_groups:
                     # Check if these groups are equivalent
                     if idea_group and fact_group:
+                        # Use the first element as representative of the equivalence class
                         if self.egraph.get_equality(idea_group[0], fact_group[0]):
                             # Try to match within this equivalence class
                             for x in idea_group:
                                 for y in fact_group:
                                     # Build the equality query and check matches
-                                    query = _build_lhs_rhs_to_term(x, y)
-                                    target_equality = _build_lhs_rhs_to_term(idea, fact)
-                                    if unification := query @ target_equality:
-                                        if result := query.ground(unification, scope="1"):
+                                    # query is (x == y), target_pattern is (idea == fact)
+                                    equality_pair = _build_lhs_rhs_to_term(x, y)
+                                    target_pattern = _build_lhs_rhs_to_term(idea, fact)
+                                    if unification := equality_pair @ target_pattern:
+                                        if result := equality_pair.ground(unification, scope="1"):
                                             term = result.term
                                             if isinstance(term, List):
                                                 yield _build_term_to_rule(term[2])
