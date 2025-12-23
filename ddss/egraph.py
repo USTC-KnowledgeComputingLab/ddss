@@ -202,7 +202,6 @@ class Search:
         for fact in self.facts:
             if self.egraph.get_equality(idea, fact):
                 yield data
-                break
         
         # 尝试处理含有变量的情况
         # Optimization: Collect candidates that can match the idea
