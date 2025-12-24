@@ -1,7 +1,8 @@
-import sys
 import asyncio
 import tempfile
 import pathlib
+from typing import Annotated, Optional
+import tyro
 from .orm import initialize_database
 from .ds import main as ds
 from .egg import main as egg
@@ -36,25 +37,41 @@ sqlalchemy_driver = {
 
 
 def cli():
-    if len(sys.argv) == 1:
-        tmpdir = tempfile.TemporaryDirectory()
-        path = pathlib.Path(tmpdir.name) / "ddss.db"
-        addr = f"sqlite:///{path.as_posix()}"
-    elif len(sys.argv) == 2 and sys.argv[1] not in ["--help", "-help", "-h", "/help", "/h", "/?"]:
-        addr = sys.argv[1]
-    else:
-        print(f"Usage: {sys.argv[0]} [<database-addr>]")
-        sys.exit(1)
-    for key, value in sqlalchemy_driver.items():
-        if addr.startswith(f"{key}://"):
-            addr = addr.replace(f"{key}://", f"{key}+{value}://")
-        if addr.startswith(f"{key}+{value}://"):
-            break
-    else:
-        print(f"Unsupported database address: {addr}")
-        sys.exit(1)
-    print(f"addr: {addr}")
-    asyncio.run(main(addr))
+    """DDSS - Distributed Deductive System Sorts
+    
+    Run DDSS with an interactive deductive reasoning environment.
+    """
+    
+    def run(
+        addr: Annotated[
+            Optional[str],
+            tyro.conf.arg(
+                aliases=["-a"],
+                help="Database address URL. Supported: sqlite://, mysql://, mariadb://, postgresql://. "
+                "If not provided, uses a temporary SQLite database."
+            )
+        ] = None,
+    ) -> None:
+        """Start DDSS with the specified database address."""
+        if addr is None:
+            tmpdir = tempfile.TemporaryDirectory()
+            path = pathlib.Path(tmpdir.name) / "ddss.db"
+            addr = f"sqlite:///{path.as_posix()}"
+        
+        # Add driver suffix to database URL if needed
+        for key, value in sqlalchemy_driver.items():
+            if addr.startswith(f"{key}://"):
+                addr = addr.replace(f"{key}://", f"{key}+{value}://")
+            if addr.startswith(f"{key}+{value}://"):
+                break
+        else:
+            print(f"Unsupported database address: {addr}")
+            raise SystemExit(1)
+        
+        print(f"addr: {addr}")
+        asyncio.run(main(addr))
+    
+    tyro.cli(run)
 
 
 if __name__ == "__main__":
