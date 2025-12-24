@@ -1,7 +1,6 @@
 import asyncio
 import tempfile
 import pathlib
-import sys
 from typing import Annotated, Optional
 import tyro
 from .orm import initialize_database
@@ -11,16 +10,27 @@ from .input import main as input
 from .output import main as output
 
 
-async def run(addr):
+async def run(addr, components):
     engine, session = await initialize_database(addr)
+    
+    # Map component names to their main functions
+    component_map = {
+        "ds": ds,
+        "egg": egg,
+        "input": input,
+        "output": output,
+    }
+    
+    # Create tasks only for requested components
+    tasks = [
+        asyncio.create_task(component_map[component](addr, engine, session))
+        for component in components
+        if component in component_map
+    ]
+    
     try:
         await asyncio.wait(
-            [
-                asyncio.create_task(ds(addr, engine, session)),
-                asyncio.create_task(egg(addr, engine, session)),
-                asyncio.create_task(input(addr, engine, session)),
-                asyncio.create_task(output(addr, engine, session)),
-            ],
+            tasks,
             return_when=asyncio.FIRST_COMPLETED,
         )
     except asyncio.CancelledError:
@@ -37,10 +47,6 @@ sqlalchemy_driver = {
 }
 
 
-# Global to keep temporary directory alive during execution
-_tmpdir = None
-
-
 def main(
     addr: Annotated[
         Optional[str],
@@ -50,14 +56,24 @@ def main(
             "If not provided, uses a temporary SQLite database."
         )
     ] = None,
+    component: Annotated[
+        Optional[list[str]],
+        tyro.conf.arg(
+            help="Components to run. Available: input, output, ds, egg."
+        )
+    ] = None,
 ) -> None:
-    """Start DDSS with the specified database address."""
-    # Use a global to keep the temporary directory alive
-    global _tmpdir
+    """DDSS - Distributed Deductive System Sorts
+    
+    Run DDSS with an interactive deductive reasoning environment.
+    """
     if addr is None:
-        _tmpdir = tempfile.TemporaryDirectory()
-        path = pathlib.Path(_tmpdir.name) / "ddss.db"
+        tmpdir = tempfile.TemporaryDirectory()
+        path = pathlib.Path(tmpdir.name) / "ddss.db"
         addr = f"sqlite:///{path.as_posix()}"
+    
+    if component is None:
+        component = ["input", "output", "ds", "egg"]
     
     # Add driver suffix to database URL if needed
     for key, value in sqlalchemy_driver.items():
@@ -67,17 +83,13 @@ def main(
             break
     else:
         print(f"Unsupported database address: {addr}")
-        sys.exit(1)
+        raise SystemExit(1)
     
     print(f"addr: {addr}")
-    asyncio.run(run(addr))
+    asyncio.run(run(addr, component))
 
 
 def cli():
-    """DDSS - Distributed Deductive System Sorts
-    
-    Run DDSS with an interactive deductive reasoning environment.
-    """
     tyro.cli(main)
 
 
