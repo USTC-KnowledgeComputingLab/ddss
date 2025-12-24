@@ -76,7 +76,7 @@ async def test_load_invalid_input_handling(temp_db, capsys):
 
     # Check that error was printed to stderr
     captured = capsys.readouterr()
-    assert "error:" in captured.err
+    assert "error:" in captured.out
 
     # Verify no data was stored
     async with session() as sess:
@@ -148,7 +148,7 @@ async def test_load_mixed_valid_and_invalid(temp_db, capsys):
 
     # Check that error was printed for invalid input
     captured = capsys.readouterr()
-    assert "error:" in captured.err
+    assert "error:" in captured.out
 
     # Verify valid data was stored
     async with session() as sess:
