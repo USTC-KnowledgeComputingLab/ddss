@@ -1,5 +1,4 @@
 import sys
-import asyncio
 from apyds_bnf import parse
 from .orm import initialize_database, insert_or_ignore, Facts, Ideas
 from .utility import str_rule_get_str_idea
@@ -30,10 +29,3 @@ async def main(addr, engine=None, session=None):
             await sess.commit()
     finally:
         await engine.dispose()
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <database-addr>")
-        sys.exit(1)
-    asyncio.run(main(sys.argv[1]))

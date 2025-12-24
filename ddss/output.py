@@ -1,4 +1,3 @@
-import sys
 import asyncio
 from sqlalchemy import select
 from apyds_bnf import unparse
@@ -35,10 +34,3 @@ async def main(addr, engine=None, session=None):
         pass
     finally:
         await engine.dispose()
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <database-addr>")
-        sys.exit(1)
-    asyncio.run(main(sys.argv[1]))

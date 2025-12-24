@@ -1,4 +1,3 @@
-import sys
 import asyncio
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
@@ -41,10 +40,3 @@ async def main(addr, engine=None, session=None):
         pass
     finally:
         await engine.dispose()
-
-
-if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print(f"Usage: {sys.argv[0]} <database-addr>")
-        sys.exit(1)
-    asyncio.run(main(sys.argv[1]))
