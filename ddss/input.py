@@ -16,16 +16,22 @@ async def main(addr, engine=None, session=None):
         while True:
             try:
                 with patch_stdout():
-                    data = await prompt.prompt_async("input: ")
-                if data.strip() == "":
-                    continue
+                    line = await prompt.prompt_async("input: ")
             except (EOFError, KeyboardInterrupt):
                 raise asyncio.CancelledError()
+
+            data = line.strip()
+            if data == "":
+                continue
+            if data.startswith("//"):
+                continue
+
             try:
                 ds = parse(data)
             except Exception as e:
                 print(f"error: {e}")
                 continue
+
             async with session() as sess:
                 await insert_or_ignore(sess, Facts, ds)
                 if idea := str_rule_get_str_idea(ds):

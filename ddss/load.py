@@ -11,16 +11,17 @@ async def main(addr, engine=None, session=None):
 
     try:
         async with session() as sess:
-            # Read all lines from stdin
             for line in sys.stdin:
                 data = line.strip()
-                if not data:
+                if data == "":
+                    continue
+                if data.startswith("//"):
                     continue
 
                 try:
                     ds = parse(data)
                 except Exception as e:
-                    print(f"error: {e}", file=sys.stderr)
+                    print(f"error: {e}")
                     continue
 
                 await insert_or_ignore(sess, Facts, ds)
