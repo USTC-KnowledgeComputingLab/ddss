@@ -28,7 +28,7 @@ async def run(addr: str, components: list[str]) -> None:
         try:
             coroutines = [component_map[component](addr, engine, session) for component in components]
         except KeyError as e:
-            print(f"error: unsupported component {e}")
+            print(f"error: unsupported component: {e}")
             raise asyncio.CancelledError()
 
         await asyncio.wait(
@@ -80,8 +80,8 @@ def main(
         if addr.startswith(f"{key}+{value}://"):
             break
     else:
-        print(f"error: unsupported database: {addr}")
-        raise SystemExit(1)
+        print(f"error: unsupported database: '{addr}'")
+        return
 
     print(f"addr: {addr}")
     asyncio.run(run(addr, component))
