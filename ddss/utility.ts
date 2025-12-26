@@ -1,3 +1,4 @@
+import type { Interface } from "node:readline";
 import { stdout } from "node:process";
 
 export function strRuleGetStrIdea(data: string): string | null {
@@ -8,7 +9,7 @@ export function strRuleGetStrIdea(data: string): string | null {
     return null;
 }
 
-export function patchStdout(rl: any) {
+export function patchStdout(rl: Interface) {
     const originalWrite = stdout.write;
     let isReprompting = false;
 
