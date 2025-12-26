@@ -12,6 +12,7 @@ __pycache__/
 
 # Coverage
 .coverage
+coverage/
 
 # Node
 node_modules/
