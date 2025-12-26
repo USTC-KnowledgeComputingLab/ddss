@@ -67,6 +67,6 @@ export function cli() {
     program.parse();
 }
 
-if (process.argv[1] === fileURLToPath(import.meta.url)) {
+if (import.meta.main) {
     cli();
 }

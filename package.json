@@ -1,5 +1,5 @@
 {
-    "name": "ddss",
+    "name": "@hzhangxyz/ddss",
     "description": "Distributed Deductive System Sorts",
     "author": "Hao Zhang <hzhangxyz@outlook.com>",
     "license": "AGPL-3.0-or-later",
