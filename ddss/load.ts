@@ -1,8 +1,9 @@
-import * as readline from "node:readline";
-import { parse } from "atsds-bnf";
-import { initializeDatabase, insertOrIgnore, Fact, Idea } from "./orm.js";
-import { strRuleGetStrIdea } from "./utility.js";
+import * as readline from "node:readline/promises";
+import { stdin as input } from "node:process";
 import type { Sequelize } from "sequelize";
+import { parse } from "atsds-bnf";
+import { Fact, Idea, initializeDatabase, insertOrIgnore } from "./orm.ts";
+import { strRuleGetStrIdea } from "./utility.ts";
 
 export async function main(addr: string, sequelize?: Sequelize) {
     if (!sequelize) {
@@ -10,30 +11,28 @@ export async function main(addr: string, sequelize?: Sequelize) {
     }
 
     const rl = readline.createInterface({
-        input: process.stdin,
+        input,
         terminal: false,
     });
 
-    try {
-        for await (const line of rl) {
-            const data = line.trim();
-            if (data === "" || data.startsWith("//")) {
-                continue;
-            }
-
-            try {
-                const ds = parse(data);
-                const dsStr = ds.toString();
-                await insertOrIgnore(Fact, dsStr);
-                const idea = strRuleGetStrIdea(dsStr);
-                if (idea) {
-                    await insertOrIgnore(Idea, idea);
-                }
-            } catch (e) {
-                console.error(`error: ${e}`);
-            }
+    for await (const line of rl) {
+        const data = line.trim();
+        if (data === "" || data.startsWith("//")) {
+            continue;
         }
-    } finally {
-        rl.close();
+
+        try {
+            const ds = parse(data);
+            const dsStr = ds.toString();
+
+            await insertOrIgnore(Fact, dsStr);
+            const idea = strRuleGetStrIdea(dsStr);
+            if (idea) {
+                await insertOrIgnore(Idea, idea);
+            }
+        } catch (e) {
+            console.error(`error: ${e}`);
+        }
     }
+    rl.close();
 }
