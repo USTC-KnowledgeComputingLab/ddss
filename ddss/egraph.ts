@@ -1,4 +1,4 @@
-import { Term, Rule, List } from "atsds";
+import { List, Rule, Term } from "atsds";
 import { EGraph, type EClassId } from "atsds-egg";
 
 function buildTermToRule(data: Term): Rule {
@@ -14,7 +14,6 @@ function extractLhsRhsFromRule(data: Rule): [Term, Term] | null {
     if (!(inner instanceof List)) {
         return null;
     }
-    // (binary == lhs rhs) -> list of 4 elements: "binary", "==", lhs, rhs
     if (!(inner.length() === 4 && inner.getitem(0).toString() === "binary" && inner.getitem(1).toString() === "==")) {
         return null;
     }
@@ -26,8 +25,8 @@ function buildLhsRhsToTerm(lhs: Term, rhs: Term): Term {
 }
 
 class InternalEGraph {
-    core: EGraph;
-    mapping: Map<string, EClassId>;
+    private core: EGraph;
+    private mapping: Map<string, EClassId>;
 
     constructor() {
         this.core = new EGraph();
@@ -43,8 +42,7 @@ class InternalEGraph {
     }
 
     find(data: Term): EClassId {
-        const dataId = this.getOrAdd(data);
-        return this.core.find(dataId);
+        return this.core.find(this.getOrAdd(data));
     }
 
     setEquality(lhs: Term, rhs: Term): void {
@@ -65,12 +63,12 @@ class InternalEGraph {
 }
 
 export class Search {
-    egraph: InternalEGraph;
-    terms: Set<string>;
-    facts: Set<string>;
-    newlyAddedTerms: Set<string>;
-    newlyAddedFacts: Set<string>;
-    factMatchingCache: Map<string, Set<string>>;
+    private egraph: InternalEGraph;
+    private terms: Set<string>;
+    private facts: Set<string>;
+    private newlyAddedTerms: Set<string>;
+    private newlyAddedFacts: Set<string>;
+    private factMatchingCache: Map<string, Set<string>>;
 
     constructor() {
         this.egraph = new InternalEGraph();
@@ -83,32 +81,31 @@ export class Search {
 
     rebuild(): void {
         this.egraph.rebuild();
+
+        const newlyAddedTermsList = Array.from(this.newlyAddedTerms).map((s) => new Term(s));
         for (const factStr of this.facts) {
             const fact = new Term(factStr);
             if (!this.factMatchingCache.has(factStr)) {
                 this.factMatchingCache.set(factStr, new Set());
             }
-            const candidates = this.collectMatchingCandidates(
-                fact,
-                Array.from(this.newlyAddedTerms).map((s) => new Term(s)),
-            );
+            const candidates = this.collectMatchingCandidates(fact, newlyAddedTermsList);
             for (const c of candidates) {
                 this.factMatchingCache.get(factStr)!.add(c.toString());
             }
         }
+
+        const termsList = Array.from(this.terms).map((s) => new Term(s));
         for (const factStr of this.newlyAddedFacts) {
             const fact = new Term(factStr);
             if (!this.factMatchingCache.has(factStr)) {
                 this.factMatchingCache.set(factStr, new Set());
             }
-            const candidates = this.collectMatchingCandidates(
-                fact,
-                Array.from(this.terms).map((s) => new Term(s)),
-            );
+            const candidates = this.collectMatchingCandidates(fact, termsList);
             for (const c of candidates) {
                 this.factMatchingCache.get(factStr)!.add(c.toString());
             }
         }
+
         this.newlyAddedTerms.clear();
         this.newlyAddedFacts.clear();
     }
@@ -152,14 +149,9 @@ export class Search {
             yield data;
         }
 
-        const lhsPool = this.collectMatchingCandidates(
-            lhs,
-            Array.from(this.terms).map((s) => new Term(s)),
-        );
-        const rhsPool = this.collectMatchingCandidates(
-            rhs,
-            Array.from(this.terms).map((s) => new Term(s)),
-        );
+        const termsList = Array.from(this.terms).map((s) => new Term(s));
+        const lhsPool = this.collectMatchingCandidates(lhs, termsList);
+        const rhsPool = this.collectMatchingCandidates(rhs, termsList);
 
         if (lhsPool.length === 0 || rhsPool.length === 0) return;
 
@@ -203,10 +195,8 @@ export class Search {
             }
         }
 
-        const ideaPool = this.collectMatchingCandidates(
-            idea,
-            Array.from(this.terms).map((s) => new Term(s)),
-        );
+        const termsList = Array.from(this.terms).map((s) => new Term(s));
+        const ideaPool = this.collectMatchingCandidates(idea, termsList);
         if (ideaPool.length === 0) return;
 
         const ideaGroups = this.groupByEquivalenceClass(ideaPool);
@@ -235,7 +225,7 @@ export class Search {
                                         const result = target.ground(unification, "1");
                                         if (result) {
                                             const inner = result.term();
-                                            if (inner instanceof List && inner.length() >= 3) {
+                                            if (inner instanceof List) {
                                                 yield buildTermToRule(inner.getitem(2));
                                             }
                                         }
@@ -255,9 +245,9 @@ export class Search {
 
     private groupByEquivalenceClass(terms: Term[]): Set<string>[] {
         if (terms.length === 0) return [];
-        const eidToTerms = new Map<any, Set<string>>();
+        const eidToTerms = new Map<string, Set<string>>();
         for (const term of terms) {
-            const eid = this.egraph.find(term);
+            const eid = this.egraph.find(term).toString();
             if (!eidToTerms.has(eid)) {
                 eidToTerms.set(eid, new Set());
             }
