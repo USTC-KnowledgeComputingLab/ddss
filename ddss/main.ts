@@ -58,6 +58,7 @@ export function cli() {
                 const dbPath = path.join(tmpDir, "ddss.db");
                 addr = `sqlite:///${dbPath}`;
             }
+            console.log(`addr: ${addr}`);
 
             if (addr.startsWith("sqlite://")) {
                 addr = addr.replace("sqlite:///", "sqlite:");
@@ -72,7 +73,6 @@ export function cli() {
                 return;
             }
 
-            console.log(`addr: ${addr}`);
             await run(addr, options.component);
 
             if (tmpDir) {

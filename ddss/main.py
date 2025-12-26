@@ -70,6 +70,7 @@ def main(
         tmpdir = tempfile.TemporaryDirectory(prefix="ddss-")
         path = pathlib.Path(tmpdir.name) / "ddss.db"
         addr = f"sqlite:///{path.as_posix()}"
+    print(f"addr: {addr}")
 
     for key, value in sqlalchemy_driver.items():
         if addr.startswith(f"{key}://"):
@@ -80,7 +81,6 @@ def main(
         print(f"error: unsupported database: '{addr}'")
         return
 
-    print(f"addr: {addr}")
     asyncio.run(run(addr, component))
 
 
