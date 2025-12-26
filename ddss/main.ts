@@ -1,7 +1,8 @@
-import * as fs from "node:fs";
+import * as fs from "node:fs/promises";
 import * as os from "node:os";
 import * as path from "node:path";
 import { Command } from "commander";
+import type { Sequelize } from "sequelize";
 import { main as ds } from "./ds.ts";
 import { main as dump } from "./dump.ts";
 import { main as egg } from "./egg.ts";
@@ -10,7 +11,9 @@ import { main as load } from "./load.ts";
 import { main as output } from "./output.ts";
 import { initializeDatabase } from "./orm.ts";
 
-const componentMap: Record<string, any> = {
+type ComponentMain = (addr: string, sequelize: Sequelize) => Promise<void>;
+
+const componentMap: Record<string, ComponentMain> = {
     ds,
     egg,
     input,
@@ -20,27 +23,23 @@ const componentMap: Record<string, any> = {
 };
 
 async function run(addr: string, components: string[]) {
-    let sequelizeAddr = addr;
-    if (addr.startsWith("sqlite:///")) {
-        sequelizeAddr = `sqlite:${addr.replace("sqlite:///", "")}`;
+    for (const name of components) {
+        if (!(name in componentMap)) {
+            console.error(`error: unsupported component: ${name}`);
+            return;
+        }
     }
 
-    const sequelize = await initializeDatabase(sequelizeAddr);
+    const sequelize = await initializeDatabase(addr);
 
-    try {
-        const promises = components.map((name) => {
-            const component = componentMap[name];
-            if (!component) {
-                console.error(`error: unsupported component: ${name}`);
-                process.exit(1);
-            }
-            return component(addr, sequelize);
-        });
+    const promises = components.map((name) => {
+        const component = componentMap[name]!;
+        return component(addr, sequelize);
+    });
 
-        await Promise.all(promises);
-    } finally {
-        await sequelize.close();
-    }
+    await Promise.race(promises);
+
+    await sequelize.close();
 }
 
 export function cli() {
@@ -53,14 +52,32 @@ export function cli() {
         .option("-c, --component <names...>", "Components to run.", ["input", "output", "ds", "egg"])
         .action(async (options) => {
             let addr = options.addr;
+            let tmpDir: string | undefined;
             if (!addr) {
-                const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), "ddss-"));
+                tmpDir = await fs.mkdtemp(path.join(os.tmpdir(), "ddss-"));
                 const dbPath = path.join(tmpDir, "ddss.db");
                 addr = `sqlite:///${dbPath}`;
             }
 
+            if (addr.startsWith("sqlite://")) {
+                addr = addr.replace("sqlite:///", "sqlite:");
+            } else if (addr.startsWith("mysql:///")) {
+                // Nothing to change
+            } else if (addr.startsWith("mariadb://")) {
+                // Nothing to change
+            } else if (addr.startsWith("postgresql://")) {
+                addr = addr.replace("postgresql://", "postgres://");
+            } else {
+                console.error(`error: unsupported database: ${addr}`);
+                return;
+            }
+
             console.log(`addr: ${addr}`);
             await run(addr, options.component);
+
+            if (tmpDir) {
+                await fs.rm(tmpDir, { recursive: true, force: true });
+            }
         });
 
     program.parse();

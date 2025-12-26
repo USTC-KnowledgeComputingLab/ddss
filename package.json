@@ -22,6 +22,9 @@
         "atsds-bnf": "^0.0.12",
         "atsds-egg": "^0.0.12",
         "commander": "^14.0.2",
+        "mariadb": "^3.4.5",
+        "mysql2": "^3.16.0",
+        "pg": "^8.16.3",
         "sequelize": "^6.37.7",
         "sqlite3": "^5.1.7"
     },
