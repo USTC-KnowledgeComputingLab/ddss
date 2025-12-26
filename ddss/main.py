@@ -67,7 +67,7 @@ def main(
 ) -> None:
     """DDSS - Distributed Deductive System Sorts: Run DDSS with an interactive deductive environment."""
     if addr is None:
-        tmpdir = tempfile.TemporaryDirectory()
+        tmpdir = tempfile.TemporaryDirectory(prefix="ddss-")
         path = pathlib.Path(tmpdir.name) / "ddss.db"
         addr = f"sqlite:///{path.as_posix()}"
 
