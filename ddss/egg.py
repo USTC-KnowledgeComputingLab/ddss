@@ -32,6 +32,7 @@ async def main(addr, engine=None, session=None):
                 for i in pool:
                     for o in search.execute(i):
                         tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, str(o))))
+                        count += 1
                         if i == o:
                             break
                     else:
