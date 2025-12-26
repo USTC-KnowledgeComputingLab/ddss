@@ -8,5 +8,16 @@ export default {
         banner: "#!/usr/bin/env node",
     },
     plugins: [typescript()],
-    external: ["atsds", "atsds-bnf", "atsds-egg", "commander", "sequelize", "sqlite3", /^node:/],
+    external: [
+        "atsds",
+        "atsds-bnf",
+        "atsds-egg",
+        "commander",
+        "mariadb",
+        "mysql2",
+        "pg",
+        "sequelize",
+        "sqlite3",
+        /^node:/,
+    ],
 };
