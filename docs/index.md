@@ -9,6 +9,11 @@ import { useRouter } from "vitepress";
 const { go } = useRouter();
 
 onMounted(() => {
-  go("/ddss/en/");
+  const userLang = navigator.language || navigator.userLanguage;
+  if (userLang.toLowerCase().startsWith("zh")) {
+    go("/ddss/zh/");
+  } else {
+    go("/ddss/en/");
+  }
 });
 </script>
