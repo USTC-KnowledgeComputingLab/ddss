@@ -5,11 +5,35 @@ export default defineConfig({
     title: "DDSS",
     description: "Distributed Deductive System Sorts",
 
-    // 多语言配置
     locales: {
         root: {
+            lang: "en",
+        },
+        en: {
             label: "English",
             lang: "en",
+            link: "/en/",
+            themeConfig: {
+                nav: [
+                    { text: "Home", link: "/en/" },
+                    { text: "Guide", link: "/en/intro" },
+                ],
+                sidebar: [
+                    {
+                        text: "Guide",
+                        items: [
+                            { text: "Introduction", link: "/en/intro" },
+                            { text: "Modules", link: "/en/modules" },
+                            { text: "Installation", link: "/en/installation" },
+                            { text: "Usage", link: "/en/usage" },
+                        ],
+                    },
+                    {
+                        text: "About",
+                        items: [{ text: "License & Links", link: "/en/license" }],
+                    },
+                ],
+            },
         },
         zh: {
             label: "简体中文",
@@ -35,7 +59,6 @@ export default defineConfig({
                         items: [{ text: "许可与链接", link: "/zh/license" }],
                     },
                 ],
-                // 中文特有的配置
                 docFooter: {
                     prev: "上一页",
                     next: "下一页",
@@ -48,28 +71,6 @@ export default defineConfig({
     },
 
     themeConfig: {
-        // https://vitepress.dev/reference/default-theme-config
-        nav: [
-            { text: "Home", link: "/" },
-            { text: "Guide", link: "/intro" },
-        ],
-
-        sidebar: [
-            {
-                text: "Guide",
-                items: [
-                    { text: "Introduction", link: "/intro" },
-                    { text: "Modules", link: "/modules" },
-                    { text: "Installation", link: "/installation" },
-                    { text: "Usage", link: "/usage" },
-                ],
-            },
-            {
-                text: "About",
-                items: [{ text: "License & Links", link: "/license" }],
-            },
-        ],
-
         socialLinks: [{ icon: "github", link: "https://github.com/USTC-KnowledgeComputingLab/ddss" }],
     },
 });
