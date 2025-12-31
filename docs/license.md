@@ -6,4 +6,5 @@ This project is licensed under the GNU Affero General Public License v3.0 or lat
 
 ## Links
 
+- Documentation: https://ustc-knowledgecomputinglab.github.io/ddss/
 - GitHub: https://github.com/USTC-KnowledgeComputingLab/ddss
