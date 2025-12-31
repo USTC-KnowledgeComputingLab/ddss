@@ -31,7 +31,7 @@ export async function main(addr: string, sequelize?: Sequelize) {
                 await insertOrIgnore(Idea, idea);
             }
         } catch (e) {
-            console.error(`error: ${e}`);
+            console.error(`error: ${(e as Error).message}`);
         }
     }
     rl.close();
