@@ -1,10 +1,14 @@
-<script setup>
-import { onMounted } from 'vue'
-import { useRouter } from 'vitepress'
+---
+# This is a redirection page to the default language
+---
 
-const { go } = useRouter()
+<script setup>
+import { onMounted } from "vue";
+import { useRouter } from "vitepress";
+
+const { go } = useRouter();
 
 onMounted(() => {
-  go('/en/')
-})
+  go("/ddss/en/");
+});
 </script>

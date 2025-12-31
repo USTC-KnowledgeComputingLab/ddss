@@ -6,9 +6,6 @@ export default defineConfig({
     description: "Distributed Deductive System Sorts",
 
     locales: {
-        root: {
-            lang: "en",
-        },
         en: {
             label: "English",
             lang: "en",
