@@ -11,9 +11,9 @@ const { go } = useRouter();
 onMounted(() => {
   const userLang = navigator.language || navigator.userLanguage;
   if (userLang.toLowerCase().startsWith("zh")) {
-    go("/ddss/zh/");
+    go("./zh/");
   } else {
-    go("/ddss/en/");
+    go("./en/");
   }
 });
 </script>
