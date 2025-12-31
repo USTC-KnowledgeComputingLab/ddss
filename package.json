@@ -18,7 +18,8 @@
         "rollup": "rollup --config rollup.config.js",
         "build": "run-s rollup",
         "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --config=jest.config.js",
-        "all": "run-s build test"
+        "all": "run-s build test",
+        "docs": "vitepress build docs --base /ddss/"
     },
     "dependencies": {
         "atsds": "^0.0.14",
@@ -43,6 +44,7 @@
         "ts-jest": "^29.4.6",
         "ts-node": "^10.9.2",
         "tslib": "^2.8.1",
-        "typescript": "^5.9.3"
+        "typescript": "^5.9.3",
+        "vitepress": "^1.6.4"
     }
 }
