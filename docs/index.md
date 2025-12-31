@@ -4,16 +4,16 @@
 
 <script setup>
 import { onMounted } from "vue";
-import { useRouter } from "vitepress";
+import { useRouter, withBase } from "vitepress";
 
 const { go } = useRouter();
 
 onMounted(() => {
   const userLang = navigator.language || navigator.userLanguage;
   if (userLang.toLowerCase().startsWith("zh")) {
-    go("./zh/");
+    go(withBase("/zh/"));
   } else {
-    go("./en/");
+    go(withBase("/en/"));
   }
 });
 </script>
