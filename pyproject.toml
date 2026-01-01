@@ -7,9 +7,9 @@ readme = "README.md"
 authors = [{ email = "hzhangxyz@outlook.com", name = "Hao Zhang" }]
 requires-python = ">=3.11"
 dependencies = [
-    "apyds~=0.0.11",
-    "apyds-bnf~=0.0.11",
-    "apyds-egg~=0.0.11",
+    "apyds~=0.0.14",
+    "apyds-bnf~=0.0.14",
+    "apyds-egg~=0.0.14",
     "prompt-toolkit~=3.0.52",
     "sqlalchemy[aiosqlite,aiomysql,postgresql-asyncpg]~=2.0.45",
     "tyro~=1.0.3",
