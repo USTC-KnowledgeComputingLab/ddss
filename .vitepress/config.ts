@@ -2,8 +2,10 @@ import { defineConfig } from "vitepress";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+    base: "/ddss/",
     title: "DDSS",
     description: "Distributed Deductive System Sorts",
+    srcDir: "docs",
 
     locales: {
         en: {
@@ -30,6 +32,10 @@ export default defineConfig({
                         items: [{ text: "License & Links", link: "/en/license" }],
                     },
                 ],
+                footer: {
+                    message: "Released under the GNU Affero General Public License v3.0 or later.",
+                    copyright: "Copyright © 2025-present Hao Zhang",
+                },
             },
         },
         zh: {
@@ -62,6 +68,10 @@ export default defineConfig({
                 },
                 outline: {
                     label: "页面导航",
+                },
+                footer: {
+                    message: "基于 GNU Affero General Public License v3.0 或更高版本发布。",
+                    copyright: "版权所有 © 2025-至今 张浩",
                 },
             },
         },

@@ -19,7 +19,7 @@
         "build": "run-s rollup",
         "test": "cross-env NODE_OPTIONS='$NODE_OPTIONS --experimental-vm-modules' jest --config=jest.config.js",
         "all": "run-s build test",
-        "docs": "vitepress build docs --base /ddss/"
+        "docs": "vitepress build"
     },
     "dependencies": {
         "atsds": "^0.0.14",
