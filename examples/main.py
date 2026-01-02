@@ -138,10 +138,17 @@ async def run(addr: str, file_name: str) -> None:
             asyncio.create_task(output(session)),
             asyncio.create_task(arithmetic(session)),
         ]
-        await asyncio.wait(
+        done, pending = await asyncio.wait(
             tasks,
             return_when=asyncio.FIRST_COMPLETED,
         )
+        for task in pending:
+            task.cancel()
+        for task in pending:
+            try:
+                await task
+            except asyncio.CancelledError:
+                pass
     except asyncio.CancelledError:
         pass
     finally:
