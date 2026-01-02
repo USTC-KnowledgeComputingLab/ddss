@@ -133,8 +133,8 @@ async def run(addr: str, file_name: str) -> None:
     try:
         await load(session, file_name)
         tasks = [
-            asyncio.create_task(ds(addr, engine, session)),
-            asyncio.create_task(egg(addr, engine, session)),
+            asyncio.create_task(ds(session)),
+            asyncio.create_task(egg(session)),
             asyncio.create_task(output(session)),
             asyncio.create_task(arithmetic(session)),
         ]
