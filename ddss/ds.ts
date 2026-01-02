@@ -13,8 +13,6 @@ export async function main(addr: string, sequelize?: Sequelize) {
     let maxFact = -1;
 
     while (true) {
-        let count = 0;
-
         const newFacts = await Fact.findAll({
             where: { id: { [Op.gt]: maxFact } },
         });
@@ -36,11 +34,9 @@ export async function main(addr: string, sequelize?: Sequelize) {
             return false;
         };
 
-        count = search.execute(handler);
+        search.execute(handler);
         await Promise.all(tasks);
 
-        if (count === 0) {
-            await new Promise((resolve) => setTimeout(resolve, 0));
-        }
+        await new Promise((resolve) => setTimeout(resolve, 0));
     }
 }

@@ -14,8 +14,6 @@ export async function main(addr: string, sequelize?: Sequelize) {
     let maxIdea = -1;
 
     while (true) {
-        let count = 0;
-
         const newIdeas = await Idea.findAll({
             where: { id: { [Op.gt]: maxIdea } },
         });
@@ -40,7 +38,6 @@ export async function main(addr: string, sequelize?: Sequelize) {
             let found = false;
             for (const o of search.execute(i)) {
                 tasks.push(insertOrIgnore(Fact, o.toString()));
-                count++;
                 if (i.toString() === o.toString()) {
                     found = true;
                     break;
@@ -53,8 +50,6 @@ export async function main(addr: string, sequelize?: Sequelize) {
         pool = nextPool;
         await Promise.all(tasks);
 
-        if (count === 0) {
-            await new Promise((resolve) => setTimeout(resolve, 0));
-        }
+        await new Promise((resolve) => setTimeout(resolve, 0));
     }
 }

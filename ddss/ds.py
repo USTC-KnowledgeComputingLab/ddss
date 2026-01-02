@@ -24,11 +24,10 @@ async def main(session):
                         tasks.append(asyncio.create_task(insert_or_ignore(sess, Ideas, idea)))
                     return False
 
-                count = search.execute(handler)
+                search.execute(handler)
                 await asyncio.gather(*tasks)
                 await sess.commit()
 
-            if count == 0:
-                await asyncio.sleep(0)
+            await asyncio.sleep(0)
     except asyncio.CancelledError:
         pass

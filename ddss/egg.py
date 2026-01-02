@@ -13,7 +13,6 @@ async def main(session):
         max_idea = -1
 
         while True:
-            count = 0
             async with session() as sess:
                 for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
                     max_idea = max(max_idea, i.id)
@@ -27,7 +26,6 @@ async def main(session):
                 for i in pool:
                     for o in search.execute(i):
                         tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, str(o))))
-                        count += 1
                         if i == o:
                             break
                     else:
@@ -36,7 +34,6 @@ async def main(session):
                 await asyncio.gather(*tasks)
                 await sess.commit()
 
-            if count == 0:
-                await asyncio.sleep(0)
+            await asyncio.sleep(0)
     except asyncio.CancelledError:
         pass
