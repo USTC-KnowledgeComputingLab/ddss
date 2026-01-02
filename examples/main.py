@@ -3,12 +3,40 @@ import asyncio
 import tempfile
 import pathlib
 from sqlalchemy import select
-from apyds import Rule, List, Variable
+from apyds import Rule, List, Variable, Term, Item
 from apyds_bnf import parse, unparse
 from ddss.orm import initialize_database, insert_or_ignore, Facts, Ideas
 from ddss.ds import main as ds
 from ddss.egg import main as egg
 from ddss.utility import str_rule_get_str_idea
+
+
+def extract_binary_from_term(term: Term) -> tuple[Item, Term, Term] | None:
+    t = term.term
+    if isinstance(t, List) and len(t) == 4 and str(t[0]) == "binary":
+        if isinstance(t[1].term, Item):
+            return t[1].term, t[2], t[3]
+    return None
+
+
+def extract_equality_from_rule(rule: Rule) -> tuple[Term, Term] | None:
+    if len(rule) != 0:
+        return None
+    res = extract_binary_from_term(rule.conclusion)
+    if res and str(res[0]) == "==":
+        return res[1], res[2]
+    return None
+
+
+def extract_literal_from_term(term: Term) -> tuple[Item | Variable, Item] | None:
+    res = extract_binary_from_term(term)
+    if res and str(res[0]) == "::":
+        lhs, rhs = res[1].term, res[2].term
+        if isinstance(lhs, List) and isinstance(rhs, Item):
+            if len(lhs) == 3 and str(lhs[0]) == "function" and str(lhs[1]) == "Literal":
+                if isinstance(lhs[2].term, Item | Variable):
+                    return lhs[2].term, rhs
+    return None
 
 
 async def arithmetic(session):
@@ -25,71 +53,41 @@ async def arithmetic(session):
                     max_idea = max(max_idea, i.id)
                     pool.append(Rule(i.data))
 
-                def get_val(lit_obj):
-                    t = lit_obj.term
-                    if isinstance(t, List) and len(t) == 4 and str(t[0]) == "binary" and str(t[1]) == "::":
-                        if str(t[3]) == "Int":
-                            lhs_term = t[2].term
-                            if (
-                                isinstance(lhs_term, List)
-                                and len(lhs_term) == 3
-                                and str(lhs_term[0]) == "function"
-                                and str(lhs_term[1]) == "Literal"
-                            ):
-                                return lhs_term[2].term
-                    return None
-
                 for rule in pool:
-                    if len(rule) == 0:
-                        term = rule.conclusion.term
-                        if (
-                            isinstance(term, List)
-                            and len(term) == 4
-                            and str(term[0]) == "binary"
-                            and str(term[1]) == "=="
-                        ):
-                            lhs_lit = term[2]
-                            rhs_lit = term[3]
+                    if eq := extract_equality_from_rule(rule):
+                        lhs_term, rhs_term = eq
 
-                            # Case: (a + b) == res
-                            lhs = lhs_lit.term
-                            if (
-                                isinstance(lhs, List)
-                                and len(lhs) == 4
-                                and str(lhs[0]) == "binary"
-                                and str(lhs[1]) == "+"
-                            ):
-                                v1 = get_val(lhs[2])
-                                v2 = get_val(lhs[3])
-                                v_res = get_val(rhs_lit)
-                                try:
-                                    a, b = int(str(v1)), int(str(v2))
-                                    if isinstance(v_res, Variable):
+                        # Case: (a + b) == res
+                        if bin_lhs := extract_binary_from_term(lhs_term):
+                            if str(bin_lhs[0]) == "+":
+                                v1_lit = extract_literal_from_term(bin_lhs[1])
+                                v2_lit = extract_literal_from_term(bin_lhs[2])
+                                v_res_lit = extract_literal_from_term(rhs_term)
+                                if v1_lit and v2_lit and v_res_lit:
+                                    try:
+                                        a, b = int(str(v1_lit[0])), int(str(v2_lit[0]))
+                                    except TypeError:
+                                        continue
+                                    if isinstance(v_res_lit[0], Variable):
                                         res = a + b
                                         fact = f"(binary == (binary + (binary :: (function Literal {a}) Int) (binary :: (function Literal {b}) Int)) (binary :: (function Literal {res}) Int))"
                                         await insert_or_ignore(sess, Facts, str(Rule(fact)))
-                                except (ValueError, TypeError):
-                                    pass
 
-                            # Case: res == (a + b)
-                            rhs = rhs_lit.term
-                            if (
-                                isinstance(rhs, List)
-                                and len(rhs) == 4
-                                and str(rhs[0]) == "binary"
-                                and str(rhs[1]) == "+"
-                            ):
-                                v1 = get_val(rhs[2])
-                                v2 = get_val(rhs[3])
-                                v_res = get_val(lhs_lit)
-                                try:
-                                    a, b = int(str(v1)), int(str(v2))
-                                    if isinstance(v_res, Variable):
+                        # Case: res == (a + b)
+                        if bin_rhs := extract_binary_from_term(rhs_term):
+                            if str(bin_rhs[0]) == "+":
+                                v1_lit = extract_literal_from_term(bin_rhs[1])
+                                v2_lit = extract_literal_from_term(bin_rhs[2])
+                                v_res_lit = extract_literal_from_term(lhs_term)
+                                if v1_lit and v2_lit and v_res_lit:
+                                    try:
+                                        a, b = int(str(v1_lit[0])), int(str(v2_lit[0]))
+                                    except TypeError:
+                                        continue
+                                    if isinstance(v_res_lit[0], Variable):
                                         res = a + b
                                         fact = f"(binary == (binary :: (function Literal {res}) Int) (binary + (binary :: (function Literal {a}) Int) (binary :: (function Literal {b}) Int)))"
                                         await insert_or_ignore(sess, Facts, str(Rule(fact)))
-                                except (ValueError, TypeError):
-                                    pass
 
                 await sess.commit()
 
