@@ -40,6 +40,14 @@ def extract_literal_from_term(term: Term) -> tuple[Item | Variable, Item] | None
 
 
 async def arithmetic(session):
+    ops = {
+        "+": lambda a, b: a + b,
+        "-": lambda a, b: a - b,
+        "*": lambda a, b: a * b,
+        "/": lambda a, b: a / b if b != 0 else None,
+    }
+    types_map = {"Int": int, "Float": float}
+
     try:
         max_idea = -1
 
@@ -57,36 +65,46 @@ async def arithmetic(session):
                     if eq := extract_equality_from_rule(rule):
                         lhs_term, rhs_term = eq
 
-                        # Case: (a + b) == res
-                        if bin_lhs := extract_binary_from_term(lhs_term):
-                            if str(bin_lhs[0]) == "+":
-                                v1_lit = extract_literal_from_term(bin_lhs[1])
-                                v2_lit = extract_literal_from_term(bin_lhs[2])
-                                v_res_lit = extract_literal_from_term(rhs_term)
-                                if v1_lit and v2_lit and v_res_lit:
-                                    try:
-                                        a, b = int(str(v1_lit[0])), int(str(v2_lit[0]))
-                                    except TypeError:
-                                        continue
-                                    if isinstance(v_res_lit[0], Variable):
-                                        res = a + b
-                                        fact = f"(binary == (binary + (binary :: (function Literal {a}) Int) (binary :: (function Literal {b}) Int)) (binary :: (function Literal {res}) Int))"
-                                        await insert_or_ignore(sess, Facts, str(Rule(fact)))
+                        for side in [("lhs", lhs_term, rhs_term), ("rhs", rhs_term, lhs_term)]:
+                            label, bin_expr, val_expr = side
+                            if bin_res := extract_binary_from_term(bin_expr):
+                                op_str = str(bin_res[0])
+                                if (
+                                    (func := ops.get(op_str))
+                                    and (v1_lit := extract_literal_from_term(bin_res[1]))
+                                    and (v2_lit := extract_literal_from_term(bin_res[2]))
+                                    and (v_res_lit := extract_literal_from_term(val_expr))
+                                ):
+                                    val1, type1 = v1_lit
+                                    val2, type2 = v2_lit
+                                    val_res, type_res = v_res_lit
+                                    val1_str = str(val1)
+                                    val2_str = str(val2)
+                                    type_str = str(type_res)
 
-                        # Case: res == (a + b)
-                        if bin_rhs := extract_binary_from_term(rhs_term):
-                            if str(bin_rhs[0]) == "+":
-                                v1_lit = extract_literal_from_term(bin_rhs[1])
-                                v2_lit = extract_literal_from_term(bin_rhs[2])
-                                v_res_lit = extract_literal_from_term(lhs_term)
-                                if v1_lit and v2_lit and v_res_lit:
-                                    try:
-                                        a, b = int(str(v1_lit[0])), int(str(v2_lit[0]))
-                                    except TypeError:
-                                        continue
-                                    if isinstance(v_res_lit[0], Variable):
-                                        res = a + b
-                                        fact = f"(binary == (binary :: (function Literal {res}) Int) (binary + (binary :: (function Literal {a}) Int) (binary :: (function Literal {b}) Int)))"
+                                    if (
+                                        isinstance(val1, Item)
+                                        and isinstance(val2, Item)
+                                        and isinstance(val_res, Variable)
+                                        and type1 == type2 == type_res
+                                        and (conv := types_map.get(type_str))
+                                    ):
+                                        a = conv(val1_str)
+                                        b = conv(val2_str)
+                                        res = func(a, b)
+
+                                        if res is None:
+                                            continue
+
+                                        v1_str = f"(binary :: (function Literal {val1_str}) {type_str})"
+                                        v2_str = f"(binary :: (function Literal {val2_str}) {type_str})"
+                                        res_str = f"(binary :: (function Literal {res}) {type_str})"
+
+                                        if label == "lhs":
+                                            fact = f"(binary == (binary {op_str} {v1_str} {v2_str}) {res_str})"
+                                        else:
+                                            fact = f"(binary == {res_str} (binary {op_str} {v1_str} {v2_str}))"
+
                                         await insert_or_ignore(sess, Facts, str(Rule(fact)))
 
                 await sess.commit()
