@@ -38,13 +38,13 @@ async def insert_or_ignore(sess: AsyncSession, model: type[Base], data: str, loc
     match sess.bind.dialect.name:
         case "sqlite":
             statement = sqlite_insert(model).values(data=data).on_conflict_do_nothing()
-            await sess.execute(statement)
+            await asyncio.shield(sess.execute(statement))
         case "mysql" | "mariadb":
             statement = mysql_insert(model).values(data=data).prefix_with("IGNORE")
-            await sess.execute(statement)
+            await asyncio.shield(sess.execute(statement))
         case "postgresql":
             statement = postgresql_insert(model).values(data=data).on_conflict_do_nothing()
-            await sess.execute(statement)
+            await asyncio.shield(sess.execute(statement))
         case _:
             async with locks[id(sess.bind)]:
                 try:
