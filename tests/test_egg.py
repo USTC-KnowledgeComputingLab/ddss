@@ -31,7 +31,7 @@ async def test_egg_symmetry_ab_to_ba(temp_db):
         await sess.commit()
 
     # Run the main function with a timeout
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -59,7 +59,7 @@ async def test_egg_transitivity_abc(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -86,7 +86,7 @@ async def test_egg_congruence_fx_fy(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -114,7 +114,7 @@ async def test_egg_substitution_fx_with_xy(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -161,7 +161,7 @@ async def test_egg_complex_situation(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -189,7 +189,7 @@ async def test_egg_cancellation(temp_db):
     addr, engine, session = temp_db
 
     # Run the main function and cancel it
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.1)
     task.cancel()
 
@@ -215,7 +215,7 @@ async def test_egg_symmetry_with_variables(temp_db):
         await sess.commit()
 
     # Run the main function with a timeout
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -243,7 +243,7 @@ async def test_egg_transitivity_with_variables(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -277,7 +277,7 @@ async def test_egg_congruence_with_variables(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -315,7 +315,7 @@ async def test_egg_substitution_with_variables(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:
@@ -371,7 +371,7 @@ async def test_egg_complex_situation_with_variables(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:

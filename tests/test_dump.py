@@ -28,7 +28,7 @@ async def test_dump_facts_correctly(temp_db, capsys):
         await sess.commit()
 
     # Run the dump function
-    await main(addr, engine, session)
+    await main(session)
 
     # Check output
     captured = capsys.readouterr()
@@ -46,7 +46,7 @@ async def test_dump_ideas_correctly(temp_db, capsys):
         await sess.commit()
 
     # Run the dump function
-    await main(addr, engine, session)
+    await main(session)
 
     # Check output
     captured = capsys.readouterr()
@@ -67,7 +67,7 @@ async def test_dump_multiple_entries(temp_db, capsys):
         await sess.commit()
 
     # Run the dump function
-    await main(addr, engine, session)
+    await main(session)
 
     # Check output
     captured = capsys.readouterr()
@@ -83,7 +83,7 @@ async def test_dump_empty_database(temp_db, capsys):
     addr, engine, session = temp_db
 
     # Run the dump function with no data
-    await main(addr, engine, session)
+    await main(session)
 
     # Check output - should be empty or just whitespace
     captured = capsys.readouterr()
@@ -102,7 +102,7 @@ async def test_dump_order(temp_db, capsys):
         await sess.commit()
 
     # Run the dump function
-    await main(addr, engine, session)
+    await main(session)
 
     # Check output order - ideas should come before facts
     captured = capsys.readouterr()
@@ -122,7 +122,7 @@ async def test_dump_with_simple_fact(temp_db, capsys):
         await sess.commit()
 
     # Run the dump function
-    await main(addr, engine, session)
+    await main(session)
 
     # Check output - unparse converts "----\nsimple\n" to " => simple"
     captured = capsys.readouterr()

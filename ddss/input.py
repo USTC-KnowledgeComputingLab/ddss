@@ -2,14 +2,11 @@ import asyncio
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
 from apyds_bnf import parse
-from .orm import initialize_database, insert_or_ignore, Facts, Ideas
+from .orm import insert_or_ignore, Facts, Ideas
 from .utility import str_rule_get_str_idea
 
 
-async def main(addr, engine=None, session=None):
-    if engine is None or session is None:
-        engine, session = await initialize_database(addr)
-
+async def main(session):
     try:
         prompt = PromptSession()
         while True:
@@ -38,5 +35,3 @@ async def main(addr, engine=None, session=None):
                 await sess.commit()
     except asyncio.CancelledError:
         pass
-    finally:
-        await engine.dispose()

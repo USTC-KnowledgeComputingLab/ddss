@@ -1,14 +1,11 @@
 import asyncio
 from sqlalchemy import select
 from apyds import Rule
-from .orm import initialize_database, insert_or_ignore, Facts, Ideas
+from .orm import insert_or_ignore, Facts, Ideas
 from .egraph import Search
 
 
-async def main(addr, engine=None, session=None):
-    if engine is None or session is None:
-        engine, session = await initialize_database(addr)
-
+async def main(session):
     try:
         search = Search()
         pool = []
@@ -48,5 +45,3 @@ async def main(addr, engine=None, session=None):
                 await asyncio.sleep(delay)
     except asyncio.CancelledError:
         pass
-    finally:
-        await engine.dispose()

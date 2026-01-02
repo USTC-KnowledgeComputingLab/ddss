@@ -26,7 +26,7 @@ async def run(addr: str, components: list[str]) -> None:
 
     try:
         try:
-            coroutines = [component_map[component](addr, engine, session) for component in components]
+            coroutines = [component_map[component](session) for component in components]
         except KeyError as e:
             print(f"error: unsupported component: {str(e)}")
             raise asyncio.CancelledError()

@@ -32,7 +32,7 @@ async def test_input_valid_fact(temp_db):
 
     with patch("ddss.input.PromptSession", return_value=mock_prompt_session):
         # Run the main function
-        task = asyncio.create_task(main(addr, engine, session))
+        task = asyncio.create_task(main(session))
         try:
             await task
         except asyncio.CancelledError:
@@ -59,7 +59,7 @@ async def test_input_generates_idea(temp_db):
 
     with patch("ddss.input.PromptSession", return_value=mock_prompt_session):
         # Run the main function
-        task = asyncio.create_task(main(addr, engine, session))
+        task = asyncio.create_task(main(session))
         try:
             await task
         except asyncio.CancelledError:
@@ -92,7 +92,7 @@ async def test_input_invalid_input_handling(temp_db, capsys):
 
     with patch("ddss.input.PromptSession", return_value=mock_prompt_session):
         # Run the main function
-        task = asyncio.create_task(main(addr, engine, session))
+        task = asyncio.create_task(main(session))
         try:
             await task
         except asyncio.CancelledError:
@@ -121,7 +121,7 @@ async def test_input_empty_input_continues(temp_db):
 
     with patch("ddss.input.PromptSession", return_value=mock_prompt_session):
         # Run the main function
-        task = asyncio.create_task(main(addr, engine, session))
+        task = asyncio.create_task(main(session))
         try:
             await task
         except asyncio.CancelledError:
@@ -148,7 +148,7 @@ async def test_input_keyboard_interrupt_handling(temp_db):
 
     with patch("ddss.input.PromptSession", return_value=mock_prompt_session):
         # Run the main function
-        task = asyncio.create_task(main(addr, engine, session))
+        task = asyncio.create_task(main(session))
         try:
             await task
         except asyncio.CancelledError:
@@ -178,7 +178,7 @@ async def test_input_cancellation(temp_db):
 
     with patch("ddss.input.PromptSession", return_value=mock_prompt_session):
         # Run the main function and cancel it
-        task = asyncio.create_task(main(addr, engine, session))
+        task = asyncio.create_task(main(session))
         await asyncio.sleep(0.2)  # Let it process a bit
         task.cancel()
 
@@ -208,7 +208,7 @@ async def test_input_multiple_entries(temp_db):
 
     with patch("ddss.input.PromptSession", return_value=mock_prompt_session):
         # Run the main function
-        task = asyncio.create_task(main(addr, engine, session))
+        task = asyncio.create_task(main(session))
         try:
             await task
         except asyncio.CancelledError:

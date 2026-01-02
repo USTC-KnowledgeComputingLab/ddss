@@ -1,13 +1,11 @@
+import asyncio
 import sys
 from apyds_bnf import parse
-from .orm import initialize_database, insert_or_ignore, Facts, Ideas
+from .orm import insert_or_ignore, Facts, Ideas
 from .utility import str_rule_get_str_idea
 
 
-async def main(addr, engine=None, session=None):
-    if engine is None or session is None:
-        engine, session = await initialize_database(addr)
-
+async def main(session):
     try:
         async with session() as sess:
             for line in sys.stdin:
@@ -27,5 +25,5 @@ async def main(addr, engine=None, session=None):
                 if idea := str_rule_get_str_idea(ds):
                     await insert_or_ignore(sess, Ideas, idea)
             await sess.commit()
-    finally:
-        await engine.dispose()
+    except asyncio.CancelledError:
+        pass

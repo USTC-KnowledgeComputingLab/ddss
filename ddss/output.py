@@ -1,13 +1,10 @@
 import asyncio
 from sqlalchemy import select
 from apyds_bnf import unparse
-from .orm import initialize_database, Facts, Ideas
+from .orm import Facts, Ideas
 
 
-async def main(addr, engine=None, session=None):
-    if engine is None or session is None:
-        engine, session = await initialize_database(addr)
-
+async def main(session):
     try:
         max_fact = -1
         max_idea = -1
@@ -34,5 +31,3 @@ async def main(addr, engine=None, session=None):
                 await asyncio.sleep(delay)
     except asyncio.CancelledError:
         pass
-    finally:
-        await engine.dispose()

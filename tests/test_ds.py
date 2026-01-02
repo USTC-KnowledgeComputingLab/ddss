@@ -31,7 +31,7 @@ async def test_ds_simple_modus_ponens(temp_db):
         await sess.commit()
 
     # Run the main function with a timeout
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)  # Give it time to process
     task.cancel()
     try:
@@ -59,7 +59,7 @@ async def test_ds_multi_premise_with_idea(temp_db):
         await sess.commit()
 
     # Run the main function with a timeout
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)  # Give it time to process
     task.cancel()
     try:
@@ -94,7 +94,7 @@ async def test_ds_no_inference_without_matching_facts(temp_db):
         await sess.commit()
 
     # Run the main function with a timeout
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)  # Give it time to process
     task.cancel()
     try:
@@ -126,7 +126,7 @@ async def test_ds_multiple_inferences(temp_db):
         await sess.commit()
 
     # Run the main function with a timeout
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.5)  # Give it time for multiple rounds
     task.cancel()
     try:
@@ -149,7 +149,7 @@ async def test_ds_cancellation(temp_db):
     addr, engine, session = temp_db
 
     # Run the main function and cancel it
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.1)  # Let it start
     task.cancel()
 
@@ -174,7 +174,7 @@ async def test_ds_duplicate_facts_not_added(temp_db):
         await sess.commit()
 
     # Run the main function
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.3)
     task.cancel()
     try:

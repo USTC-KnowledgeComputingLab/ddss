@@ -29,7 +29,7 @@ async def test_output_formats_facts_correctly(temp_db, capsys):
         await sess.commit()
 
     # Run the main function with a timeout to avoid infinite loop
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.2)  # Give it time to process
     task.cancel()
     try:
@@ -53,7 +53,7 @@ async def test_output_formats_ideas_correctly(temp_db, capsys):
         await sess.commit()
 
     # Run the main function with a timeout to avoid infinite loop
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.2)  # Give it time to process
     task.cancel()
     try:
@@ -80,7 +80,7 @@ async def test_output_multiple_entries(temp_db, capsys):
         await sess.commit()
 
     # Run the main function with a timeout to avoid infinite loop
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.2)  # Give it time to process
     task.cancel()
     try:
@@ -102,7 +102,7 @@ async def test_output_cancellation(temp_db):
     addr, engine, session = temp_db
 
     # Run the main function and cancel it
-    task = asyncio.create_task(main(addr, engine, session))
+    task = asyncio.create_task(main(session))
     await asyncio.sleep(0.1)  # Let it start
     task.cancel()
 

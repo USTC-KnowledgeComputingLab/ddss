@@ -29,7 +29,7 @@ async def test_load_valid_fact(temp_db):
     mock_stdin = StringIO("a => b\n")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Verify data was stored
     async with session() as sess:
@@ -48,7 +48,7 @@ async def test_load_generates_idea(temp_db):
     mock_stdin = StringIO("a => b\n")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Verify both Fact and Idea were stored
     async with session() as sess:
@@ -72,7 +72,7 @@ async def test_load_invalid_input_handling(temp_db, capsys):
     mock_stdin = StringIO("=>\n")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Check that error was printed to stderr
     captured = capsys.readouterr()
@@ -94,7 +94,7 @@ async def test_load_empty_input_skipped(temp_db):
     mock_stdin = StringIO("\n  \na => b\n")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Verify only the valid input was stored
     async with session() as sess:
@@ -113,7 +113,7 @@ async def test_load_multiple_entries(temp_db):
     mock_stdin = StringIO("a => b\nc => d\nsimple\n")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Verify all data was stored
     async with session() as sess:
@@ -144,7 +144,7 @@ async def test_load_mixed_valid_and_invalid(temp_db, capsys):
     mock_stdin = StringIO("a => b\n=>\nc => d\n")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Check that error was printed for invalid input
     captured = capsys.readouterr()
@@ -169,7 +169,7 @@ async def test_load_empty_stdin(temp_db):
     mock_stdin = StringIO("")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Verify no data was stored
     async with session() as sess:
@@ -192,7 +192,7 @@ async def test_load_duplicate_entries(temp_db):
     mock_stdin = StringIO("a => b\n")
 
     with patch("sys.stdin", mock_stdin):
-        await main(addr, engine, session)
+        await main(session)
 
     # Verify only one entry exists (duplicate was ignored)
     async with session() as sess:

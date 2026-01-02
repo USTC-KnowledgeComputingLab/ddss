@@ -1,17 +1,15 @@
+import asyncio
 from sqlalchemy import select
 from apyds_bnf import unparse
-from .orm import initialize_database, Facts, Ideas
+from .orm import Facts, Ideas
 
 
-async def main(addr, engine=None, session=None):
-    if engine is None or session is None:
-        engine, session = await initialize_database(addr)
-
+async def main(session):
     try:
         async with session() as sess:
             for i in await sess.scalars(select(Ideas)):
                 print("idea:", unparse(i.data))
             for f in await sess.scalars(select(Facts)):
                 print("fact:", unparse(f.data))
-    finally:
-        await engine.dispose()
+    except asyncio.CancelledError:
+        pass
