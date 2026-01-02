@@ -52,9 +52,6 @@ async def arithmetic(session):
         max_idea = -1
 
         while True:
-            count = 0
-            begin = asyncio.get_running_loop().time()
-
             async with session() as sess:
                 pool: list[Rule] = []
                 for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
@@ -109,11 +106,7 @@ async def arithmetic(session):
 
                 await sess.commit()
 
-            end = asyncio.get_running_loop().time()
-            duration = end - begin
-            if count == 0:
-                delay = max(0, 0.1 - duration)
-                await asyncio.sleep(delay)
+            await asyncio.sleep(0)
     except asyncio.CancelledError:
         pass
 
@@ -124,18 +117,13 @@ async def output(session):
         max_idea = -1
 
         while True:
-            count = 0
-            begin = asyncio.get_running_loop().time()
-
             async with session() as sess:
                 for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
                     max_idea = max(max_idea, i.id)
                     print("idea:", unparse(i.data))
-                    count += 1
                 for i in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
                     max_fact = max(max_fact, i.id)
                     print("fact:", unparse(i.data))
-                    count += 1
 
                     rule = Rule(i.data)
                     if len(rule) == 0:
@@ -146,11 +134,7 @@ async def output(session):
                                 raise asyncio.CancelledError()
                 await sess.commit()
 
-            end = asyncio.get_running_loop().time()
-            duration = end - begin
-            if count == 0:
-                delay = max(0, 0.1 - duration)
-                await asyncio.sleep(delay)
+            await asyncio.sleep(0)
     except asyncio.CancelledError:
         pass
 
