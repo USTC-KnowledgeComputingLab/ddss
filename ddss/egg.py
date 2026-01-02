@@ -14,8 +14,6 @@ async def main(session):
 
         while True:
             count = 0
-            begin = asyncio.get_running_loop().time()
-
             async with session() as sess:
                 for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
                     max_idea = max(max_idea, i.id)
@@ -38,10 +36,7 @@ async def main(session):
                 await asyncio.gather(*tasks)
                 await sess.commit()
 
-            end = asyncio.get_running_loop().time()
-            duration = end - begin
             if count == 0:
-                delay = max(0, 0.1 - duration)
-                await asyncio.sleep(delay)
+                await asyncio.sleep(0)
     except asyncio.CancelledError:
         pass

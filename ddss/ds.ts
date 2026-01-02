@@ -13,7 +13,6 @@ export async function main(addr: string, sequelize?: Sequelize) {
     let maxFact = -1;
 
     while (true) {
-        const begin = Date.now();
         let count = 0;
 
         const newFacts = await Fact.findAll({
@@ -40,11 +39,8 @@ export async function main(addr: string, sequelize?: Sequelize) {
         count = search.execute(handler);
         await Promise.all(tasks);
 
-        const end = Date.now();
-        const duration = (end - begin) / 1000;
         if (count === 0) {
-            const delay = Math.max(0, 0.1 - duration);
-            await new Promise((resolve) => setTimeout(resolve, delay * 1000));
+            await new Promise((resolve) => setTimeout(resolve, 0));
         }
     }
 }
