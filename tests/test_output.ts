@@ -26,7 +26,7 @@ describe("output", () => {
         return logSpy.mock.calls.map((args: any[]) => args.join(" ")).join("\n");
     };
 
-    const runMain = async (addr: string, sequelize: any, maxIterations: number = 3) => {
+    const runMain = async (sequelize: any, maxIterations: number = 3) => {
         let calls = 0;
         const originalFindAll = Fact.findAll;
         const spy = jest.spyOn(Fact, "findAll");
@@ -42,7 +42,7 @@ describe("output", () => {
         });
 
         try {
-            await main(addr, sequelize);
+            await main(sequelize);
         } catch (e: any) {
             if (e.message === "ForceStop") return;
             throw e;
@@ -53,13 +53,13 @@ describe("output", () => {
 
     it("test_output_formats_facts_correctly", async () => {
         await Fact.create({ data: "a\n----\nb\n" });
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
         expect(getCapturedOutput()).toContain("fact: a => b");
     });
 
     it("test_output_formats_ideas_correctly", async () => {
         await Idea.create({ data: "x\n----\ny\n" });
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
         expect(getCapturedOutput()).toContain("idea: x => y");
     });
 
@@ -69,7 +69,7 @@ describe("output", () => {
         await Idea.create({ data: "x\n----\ny\n" });
         await Idea.create({ data: "p\n----\nq\n" });
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const output = getCapturedOutput();
         expect(output).toContain("idea: x => y");

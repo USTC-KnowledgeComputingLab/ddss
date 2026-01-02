@@ -3,11 +3,7 @@ import { Rule } from "atsds";
 import { Search } from "./egraph.ts";
 import { Fact, Idea, initializeDatabase, insertOrIgnore } from "./orm.ts";
 
-export async function main(addr: string, sequelize?: Sequelize) {
-    if (!sequelize) {
-        sequelize = await initializeDatabase(addr);
-    }
-
+export async function main(sequelize: Sequelize) {
     const search = new Search();
     let pool: Rule[] = [];
     let maxFact = -1;

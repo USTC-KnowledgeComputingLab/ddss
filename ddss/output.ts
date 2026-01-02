@@ -2,11 +2,7 @@ import { Op, type Sequelize } from "sequelize";
 import { unparse } from "atsds-bnf";
 import { Fact, Idea, initializeDatabase } from "./orm.ts";
 
-export async function main(addr: string, sequelize?: Sequelize) {
-    if (!sequelize) {
-        sequelize = await initializeDatabase(addr);
-    }
-
+export async function main(sequelize: Sequelize) {
     let maxFact = -1;
     let maxIdea = -1;
 

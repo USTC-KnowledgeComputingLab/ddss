@@ -20,7 +20,7 @@ describe("ds", () => {
         jest.restoreAllMocks();
     });
 
-    const runMain = async (addr: string, sequelize: any, maxIterations: number = 3) => {
+    const runMain = async (sequelize: any, maxIterations: number = 3) => {
         let calls = 0;
         // We need to spy on Fact.findAll because it's the driver of the loop
         // However, Fact.findAll is called in every iteration.
@@ -42,7 +42,7 @@ describe("ds", () => {
         });
 
         try {
-            await main(addr, sequelize);
+            await main(sequelize);
         } catch (e: any) {
             if (e.message === "ForceStop") return;
             console.error("Unexpected error in runMain:", e);
@@ -56,7 +56,7 @@ describe("ds", () => {
         // Add initial facts: a => b and => a
         await Fact.bulkCreate([{ data: "a\n----\nb\n" }, { data: "----\na\n" }]);
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factsData = facts.map((f) => f.data);
@@ -67,7 +67,7 @@ describe("ds", () => {
         // Add initial facts: a, b => c and => a
         await Fact.bulkCreate([{ data: "a\nb\n----\nc\n" }, { data: "----\na\n" }]);
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factsData = facts.map((f) => f.data);
@@ -82,7 +82,7 @@ describe("ds", () => {
         // Add facts that don't match: a => b and => c
         await Fact.bulkCreate([{ data: "a\n----\nb\n" }, { data: "----\nc\n" }]);
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factsData = facts.map((f) => f.data);
@@ -96,8 +96,7 @@ describe("ds", () => {
         // Add facts for chained inference: a => b, b => c, => a
         await Fact.bulkCreate([{ data: "a\n----\nb\n" }, { data: "b\n----\nc\n" }, { data: "----\na\n" }]);
 
-        // Needs more iterations
-        await runMain(addr, sequelize, 5);
+        await runMain(sequelize, 5);
 
         const facts = await Fact.findAll();
         const factsData = facts.map((f) => f.data);
@@ -123,7 +122,7 @@ describe("ds", () => {
             { data: "----\nb\n" },
         ]);
 
-        await runMain(addr, sequelize, 5);
+        await runMain(sequelize, 5);
 
         const facts = await Fact.findAll();
         const factsData = facts.map((f) => f.data);

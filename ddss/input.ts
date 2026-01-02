@@ -5,11 +5,7 @@ import { parse } from "atsds-bnf";
 import { Fact, Idea, initializeDatabase, insertOrIgnore } from "./orm.ts";
 import { patchStdout, strRuleGetStrIdea } from "./utility.ts";
 
-export async function main(addr: string, sequelize?: Sequelize) {
-    if (!sequelize) {
-        sequelize = await initializeDatabase(addr);
-    }
-
+export async function main(sequelize: Sequelize) {
     const rl = readline.createInterface({ input, output });
     rl.setPrompt("input: ");
     const unpatch = patchStdout(rl);

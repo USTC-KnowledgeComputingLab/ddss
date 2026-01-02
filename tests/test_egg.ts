@@ -20,7 +20,7 @@ describe("egg", () => {
         jest.restoreAllMocks();
     });
 
-    const runMain = async (addr: string, sequelize: any, maxIterations: number = 3) => {
+    const runMain = async (sequelize: any, maxIterations: number = 3) => {
         let calls = 0;
         const originalFindAll = Fact.findAll;
         const spy = jest.spyOn(Fact, "findAll");
@@ -36,7 +36,7 @@ describe("egg", () => {
         });
 
         try {
-            await main(addr, sequelize);
+            await main(sequelize);
         } catch (e: any) {
             if (e.message === "ForceStop") return;
             throw e;
@@ -49,7 +49,7 @@ describe("egg", () => {
         await Fact.create({ data: "----\n(binary == a b)\n" });
         await Idea.create({ data: "----\n(binary == b a)\n" });
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f) => f.data);
@@ -60,7 +60,7 @@ describe("egg", () => {
         await Fact.bulkCreate([{ data: "----\n(binary == a b)\n" }, { data: "----\n(binary == b c)\n" }]);
         await Idea.create({ data: "----\n(binary == a c)\n" });
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f) => f.data);
@@ -71,7 +71,7 @@ describe("egg", () => {
         await Fact.create({ data: "----\n(binary == x y)\n" });
         await Idea.create({ data: "----\n(binary == (unary f x) (unary f y))\n" });
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f) => f.data);
@@ -82,7 +82,7 @@ describe("egg", () => {
         await Fact.bulkCreate([{ data: "----\n(unary f x)\n" }, { data: "----\n(binary == x y)\n" }]);
         await Idea.create({ data: "----\n(unary f y)\n" });
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f) => f.data);
@@ -102,7 +102,7 @@ describe("egg", () => {
             { data: "----\n(unary f c)\n" },
         ]);
 
-        await runMain(addr, sequelize, 5);
+        await runMain(sequelize, 5);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f) => f.data);
@@ -117,7 +117,7 @@ describe("egg", () => {
         await Fact.create({ data: "----\n(binary == (unary a `x) (unary b `x))\n" });
         await Idea.create({ data: "----\n(binary == (unary b t) (unary a t))\n" });
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f) => f.data);
@@ -131,7 +131,7 @@ describe("egg", () => {
         ]);
         await Idea.create({ data: "----\n(binary == (unary a t) (unary c t))\n" });
 
-        await runMain(addr, sequelize);
+        await runMain(sequelize);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f) => f.data);

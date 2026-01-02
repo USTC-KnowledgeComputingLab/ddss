@@ -4,11 +4,7 @@ import type { Rule } from "atsds";
 import { Fact, Idea, initializeDatabase, insertOrIgnore } from "./orm.ts";
 import { strRuleGetStrIdea } from "./utility.ts";
 
-export async function main(addr: string, sequelize?: Sequelize) {
-    if (!sequelize) {
-        sequelize = await initializeDatabase(addr);
-    }
-
+export async function main(sequelize: Sequelize) {
     const search = new Search();
     let maxFact = -1;
 

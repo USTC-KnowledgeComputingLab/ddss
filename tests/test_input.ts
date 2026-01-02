@@ -59,7 +59,7 @@ describe("input", () => {
 
     it("test_input_valid_fact", async () => {
         setInput(["a => b"]);
-        await main(addr, sequelize);
+        await main(sequelize);
 
         const facts = await Fact.findAll();
         expect(facts.map((f: any) => f.data)).toContain("a\n----\nb\n");
@@ -67,7 +67,7 @@ describe("input", () => {
 
     it("test_input_generates_idea", async () => {
         setInput(["a => b"]);
-        await main(addr, sequelize);
+        await main(sequelize);
 
         const facts = await Fact.findAll();
         expect(facts.map((f: any) => f.data)).toContain("a\n----\nb\n");
@@ -78,7 +78,7 @@ describe("input", () => {
 
     it("test_input_multiple_entries", async () => {
         setInput(["a => b", "c => d", "simple"]);
-        await main(addr, sequelize);
+        await main(sequelize);
 
         const facts = await Fact.findAll();
         const factData = facts.map((f: any) => f.data);
