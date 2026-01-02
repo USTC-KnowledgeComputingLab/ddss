@@ -210,8 +210,8 @@ async function run(addr: string, fileName: string) {
     try {
         await load(fileName);
         await Promise.race([
-            ds(addr, sequelize),
-            egg(addr, sequelize),
+            ds(sequelize),
+            egg(sequelize),
             output(abortController),
             arithmetic(),
             new Promise((_, reject) => {
