@@ -23,7 +23,7 @@
     },
     "dependencies": {
         "atsds": "^0.0.14",
-        "atsds-bnf": "^0.0.14",
+        "atsds-bnf": "^0.0.15",
         "atsds-egg": "^0.0.14",
         "commander": "^14.0.2",
         "mariadb": "^3.4.5",
