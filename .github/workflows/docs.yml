@@ -2,6 +2,9 @@ name: Docs
 permissions:
   contents: read
 
+env:
+  NODE_LATEST_VERSION: 24
+
 on:
   push:
     branches:
@@ -20,6 +23,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
+          node-version: ${{ env.NODE_LATEST_VERSION }}
           cache: 'npm'
 
       - name: dependencies

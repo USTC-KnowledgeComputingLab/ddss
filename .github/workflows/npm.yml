@@ -2,6 +2,9 @@ name: Publish npm
 permissions:
   contents: read
 
+env:
+  NODE_LATEST_VERSION: 24
+
 on:
   - push
   - pull_request
@@ -25,6 +28,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
+          node-version: ${{ env.NODE_LATEST_VERSION }}
           cache: 'npm'
 
       - name: version
