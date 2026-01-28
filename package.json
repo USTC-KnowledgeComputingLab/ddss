@@ -22,7 +22,7 @@
         "docs": "vitepress build"
     },
     "dependencies": {
-        "atsds": "^0.0.14",
+        "atsds": "^0.0.15",
         "atsds-bnf": "^0.0.15",
         "atsds-egg": "^0.0.14",
         "commander": "^14.0.2",
