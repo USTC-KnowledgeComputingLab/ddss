@@ -74,14 +74,14 @@ wheels = [
 
 [[package]]
 name = "apyds-egg"
-version = "0.0.14"
+version = "0.0.17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "apyds" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/12/85/eb437e1220b909cff5bd7103933f65020dd12205357692cd60f0b606d705/apyds_egg-0.0.14.tar.gz", hash = "sha256:75c3310691b30f9b8b9f43764badb36307956bebfb0400714d86b9007fcc312d", size = 87210, upload-time = "2025-12-26T14:40:47.129Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/08/15/67e2f0bac23bd8d0ac8d2a81f740c7bebeba6aa602f21746962938310114/apyds_egg-0.0.17.tar.gz", hash = "sha256:35581ed877a04ce8cf1fdc4a7e58c78768f4bda88842b013455f5ced784b3c5e", size = 87631, upload-time = "2026-01-28T10:59:42.942Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/0b/62/39da013f1952bde91e016d12e9629f9e3fd5509492db8ae764676bf9fb93/apyds_egg-0.0.14-py3-none-any.whl", hash = "sha256:c330373d2fe0b52507aec9eaf51b5ee3a556d88bf564f2a320f5bbdc242de6f0", size = 5467, upload-time = "2025-12-26T14:40:44.564Z" },
+    { url = "https://files.pythonhosted.org/packages/27/6e/85004abe3792fe2c723d9e1aa0c10874832be832091301fa3f599550646b/apyds_egg-0.0.17-py3-none-any.whl", hash = "sha256:a8c266cff94a6db9ffd50c5f2c49d1002fc102a7249dd1292fe768956a90dd5f", size = 5470, upload-time = "2026-01-28T10:59:41.67Z" },
 ]
 
 [[package]]
