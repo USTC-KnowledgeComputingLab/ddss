@@ -62,14 +62,14 @@ wheels = [
 
 [[package]]
 name = "apyds-bnf"
-version = "0.0.14"
+version = "0.0.17"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "antlr4-python3-runtime" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/84/f0/84e7802b34436aa64980ab6341bcb341c953b9dcaa83dff9b702e00b3829/apyds_bnf-0.0.14.tar.gz", hash = "sha256:4b98d63e433b0bb8ec4076d23a7d0738ff8da72283a9b82e34fb8132a4b4d5d2", size = 87753, upload-time = "2025-12-26T14:40:46.149Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/9d/b9/9a596725a1a5b8563eec1e17184cba2eb1db7ae83d5d4c62fca79d91cea6/apyds_bnf-0.0.17.tar.gz", hash = "sha256:16328f26ac0d7a8d6d848fb293225bb19863b987723acd4a32e7f142c6e235d5", size = 87981, upload-time = "2026-01-28T10:59:53.124Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/0d/3daa2e4c466a0033871cd8d24ec67b0b6227d1926920fdf326be5da4f820/apyds_bnf-0.0.14-py3-none-any.whl", hash = "sha256:8b845dd4edda7c1c81683e21989c8748ef184362ffaf9387e83d645a21c3cebe", size = 17155, upload-time = "2025-12-26T14:40:44.102Z" },
+    { url = "https://files.pythonhosted.org/packages/35/eb/3bd78b618e747befdb2411b5abbdea751e73621053b3ec770846159d3637/apyds_bnf-0.0.17-py3-none-any.whl", hash = "sha256:40dbfc5d74dc0583a63f97fba0317a7e34fe59b313bd0f923b8cdac9fffb29ab", size = 17156, upload-time = "2026-01-28T10:59:51.596Z" },
 ]
 
 [[package]]
