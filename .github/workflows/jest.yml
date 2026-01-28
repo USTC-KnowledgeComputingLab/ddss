@@ -1,0 +1,31 @@
+name: Jest
+permissions:
+  contents: read
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  jest:
+    name: Jest
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: ['20', '22', '24']
+
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: dependencies
+        run: npm ci
+
+      - name: jest
+        run: npm run all
