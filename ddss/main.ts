@@ -3,7 +3,7 @@ import * as os from "node:os";
 import * as path from "node:path";
 import { Command } from "commander";
 import type { Sequelize } from "sequelize";
-import { main as ds } from "./ds.ts";
+import { main as search } from "./search.ts";
 import { main as dump } from "./dump.ts";
 import { main as egg } from "./egg.ts";
 import { main as input } from "./input.ts";
@@ -14,7 +14,7 @@ import { initializeDatabase } from "./orm.ts";
 type ComponentMain = (addr: string, sequelize: Sequelize) => Promise<void>;
 
 const componentMap: Record<string, ComponentMain> = {
-    ds,
+    search,
     egg,
     input,
     output,
@@ -49,7 +49,7 @@ export function cli() {
         .name("ddss")
         .description("DDSS - Distributed Deductive System Sorts: Run DDSS with an interactive deductive environment.")
         .option("-a, --addr <url>", "Database address URL. If not provided, uses a temporary SQLite database.")
-        .option("-c, --component <names...>", "Components to run.", ["input", "output", "ds", "egg"])
+        .option("-c, --component <names...>", "Components to run.", ["input", "output", "search", "egg"])
         .action(async (options) => {
             let addr = options.addr;
             let tmpDir: string | undefined;

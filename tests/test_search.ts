@@ -1,9 +1,9 @@
 import { jest, describe, it, expect, beforeEach, afterEach } from "@jest/globals";
-import { main } from "../ddss/ds.ts";
+import { main } from "../ddss/search.ts";
 import { Fact, Idea } from "../ddss/orm.ts";
 import { createTempDb } from "./utils.ts";
 
-describe("ds", () => {
+describe("search", () => {
     let sequelize: any;
     let cleanup: any;
     let addr: string;
@@ -52,7 +52,7 @@ describe("ds", () => {
         }
     };
 
-    it("test_ds_simple_modus_ponens", async () => {
+    it("test_search_simple_modus_ponens", async () => {
         // Add initial facts: a => b and => a
         await Fact.bulkCreate([{ data: "a\n----\nb\n" }, { data: "----\na\n" }]);
 
@@ -63,7 +63,7 @@ describe("ds", () => {
         expect(factsData).toContain("----\nb\n");
     });
 
-    it("test_ds_multi_premise_with_idea", async () => {
+    it("test_search_multi_premise_with_idea", async () => {
         // Add initial facts: a, b => c and => a
         await Fact.bulkCreate([{ data: "a\nb\n----\nc\n" }, { data: "----\na\n" }]);
 
@@ -78,7 +78,7 @@ describe("ds", () => {
         expect(ideasData).toContain("----\nb\n");
     });
 
-    it("test_ds_no_inference_without_matching_facts", async () => {
+    it("test_search_no_inference_without_matching_facts", async () => {
         // Add facts that don't match: a => b and => c
         await Fact.bulkCreate([{ data: "a\n----\nb\n" }, { data: "----\nc\n" }]);
 
@@ -92,7 +92,7 @@ describe("ds", () => {
         expect(factsData).toContain("----\nc\n");
     });
 
-    it("test_ds_multiple_inferences", async () => {
+    it("test_search_multiple_inferences", async () => {
         // Add facts for chained inference: a => b, b => c, => a
         await Fact.bulkCreate([{ data: "a\n----\nb\n" }, { data: "b\n----\nc\n" }, { data: "----\na\n" }]);
 
@@ -105,7 +105,7 @@ describe("ds", () => {
         expect(factsData).toContain("----\nc\n");
     });
 
-    it("test_ds_duplicate_facts_not_added", async () => {
+    it("test_search_duplicate_facts_not_added", async () => {
         // Add facts that will produce a duplicate: a => b twice with => a
         // "a\n----\nc\n" and "b\n----\nc\n" (Wait, python test says a=>b twice?
         // No, Python test says:
