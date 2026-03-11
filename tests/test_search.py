@@ -5,7 +5,7 @@ import pytest
 import pytest_asyncio
 from sqlalchemy import select
 from ddss.orm import initialize_database, Facts, Ideas
-from ddss.ds import main
+from ddss.search import main
 
 
 @pytest_asyncio.fixture
@@ -20,7 +20,7 @@ async def temp_db():
 
 
 @pytest.mark.asyncio
-async def test_ds_simple_modus_ponens(temp_db):
+async def test_search_simple_modus_ponens(temp_db):
     """Test simple modus ponens: 'a => b' with '=> a' produces '=> b'."""
     addr, engine, session = temp_db
 
@@ -48,7 +48,7 @@ async def test_ds_simple_modus_ponens(temp_db):
 
 
 @pytest.mark.asyncio
-async def test_ds_multi_premise_with_idea(temp_db):
+async def test_search_multi_premise_with_idea(temp_db):
     """Test multi-premise rule: 'a, b => c' with '=> a' produces 'b => c' and idea '=> b'."""
     addr, engine, session = temp_db
 
@@ -83,7 +83,7 @@ async def test_ds_multi_premise_with_idea(temp_db):
 
 
 @pytest.mark.asyncio
-async def test_ds_no_inference_without_matching_facts(temp_db):
+async def test_search_no_inference_without_matching_facts(temp_db):
     """Test that no inference occurs when facts don't match."""
     addr, engine, session = temp_db
 
@@ -114,7 +114,7 @@ async def test_ds_no_inference_without_matching_facts(temp_db):
 
 
 @pytest.mark.asyncio
-async def test_ds_multiple_inferences(temp_db):
+async def test_search_multiple_inferences(temp_db):
     """Test multiple inference steps in sequence."""
     addr, engine, session = temp_db
 
@@ -144,8 +144,8 @@ async def test_ds_multiple_inferences(temp_db):
 
 
 @pytest.mark.asyncio
-async def test_ds_cancellation(temp_db):
-    """Test that the ds main function can be cancelled without hanging."""
+async def test_search_cancellation(temp_db):
+    """Test that the search main function can be cancelled without hanging."""
     addr, engine, session = temp_db
 
     # Run the main function and cancel it
@@ -161,7 +161,7 @@ async def test_ds_cancellation(temp_db):
 
 
 @pytest.mark.asyncio
-async def test_ds_duplicate_facts_not_added(temp_db):
+async def test_search_duplicate_facts_not_added(temp_db):
     """Test that duplicate facts are not added to the database."""
     addr, engine, session = temp_db
 

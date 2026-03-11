@@ -30,14 +30,14 @@ ddss --addr postgresql://user:password@host:port/database
 
 ## Selecting Components
 
-By default, DDSS runs with all interactive components (`input`, `output`, `ds`, `egg`). You can select specific components using the `-c` or `--component` option:
+By default, DDSS runs with all interactive components (`input`, `output`, `search`, `egg`). You can select specific components using the `-c` or `--component` option:
 
 ```bash
 # Run only input and output (no inference engines)
 ddss --component input output
 
 # Run with only the forward-chaining engine
-ddss --component input output ds
+ddss --component input output search
 
 # Run with only the E-graph engine
 ddss --component input output egg
@@ -46,7 +46,7 @@ ddss --component input output egg
 Available components:
 - `input`: Interactive input interface
 - `output`: Real-time display of facts and ideas
-- `ds`: Forward-chaining deductive search engine
+- `search`: Forward-chaining deductive search engine
 - `egg`: E-graph based equality reasoning engine
 - `load`: Batch import facts from standard input
 - `dump`: Export all facts and ideas to output

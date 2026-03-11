@@ -4,7 +4,7 @@ import pathlib
 from typing import Annotated, Optional
 import tyro
 from .orm import initialize_database
-from .ds import main as ds
+from .search import main as search
 from .egg import main as egg
 from .input import main as input
 from .output import main as output
@@ -12,7 +12,7 @@ from .load import main as load
 from .dump import main as dump
 
 component_map = {
-    "ds": ds,
+    "search": search,
     "egg": egg,
     "input": input,
     "output": output,
@@ -63,7 +63,7 @@ def main(
             aliases=["-c"],
             help="Components to run.",
         ),
-    ] = ["input", "output", "ds", "egg"],
+    ] = ["input", "output", "search", "egg"],
 ) -> None:
     """DDSS - Distributed Deductive System Sorts: Run DDSS with an interactive deductive environment."""
     if addr is None:

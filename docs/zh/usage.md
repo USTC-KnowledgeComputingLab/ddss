@@ -30,14 +30,14 @@ ddss --addr postgresql://user:password@host:port/database
 
 ## 选择组件
 
-默认情况下，DDSS 运行所有交互式组件（`input`, `output`, `ds`, `egg`）。您可以使用 `-c` 或 `--component` 选项选择特定组件：
+默认情况下，DDSS 运行所有交互式组件（`input`, `output`, `search`, `egg`）。您可以使用 `-c` 或 `--component` 选项选择特定组件：
 
 ```bash
 # 仅运行输入和输出（无推理引擎）
 ddss --component input output
 
 # 仅运行前向链接引擎
-ddss --component input output ds
+ddss --component input output search
 
 # 仅运行 E-graph 引擎
 ddss --component input output egg
@@ -46,7 +46,7 @@ ddss --component input output egg
 可用组件：
 - `input`: 交互式输入接口
 - `output`: 实时显示事实和想法
-- `ds`: 前向链接演绎搜索引擎
+- `search`: 前向链接演绎搜索引擎
 - `egg`: 基于 E-graph 的等式推理引擎
 - `load`: 批量导入事实
 - `dump`: 导出所有事实和想法
