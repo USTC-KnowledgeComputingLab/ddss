@@ -25,6 +25,7 @@ The system consists of the following modules, implemented symmetrically in `ddss
 - **Load** (`ddss/load.py`, `ddss/load.ts`): Batch import of facts from standard input
 - **Dump** (`ddss/dump.py`, `ddss/dump.ts`): Export all facts and ideas to output
 - **Search** (`ddss/search.py`, `ddss/search.ts`): Forward-chaining deductive search engine
+- **Chain** (`ddss/chain.py`, `ddss/chain.ts`): Alternative forward-chaining engine using Chain API
 - **Egg** (`ddss/egg.py`, `ddss/egg.ts`): E-graph based equality reasoning engine
 
 ## Installation
@@ -106,6 +107,7 @@ Available components:
 - `input`: Interactive input interface
 - `output`: Real-time display of facts and ideas
 - `search`: Forward-chaining deductive search engine
+- `chain`: Alternative forward-chaining engine using Chain API
 - `egg`: E-graph based equality reasoning engine
 - `load`: Batch import facts from standard input
 - `dump`: Export all facts and ideas to output

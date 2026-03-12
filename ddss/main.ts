@@ -9,6 +9,7 @@ import { main as egg } from "./egg.ts";
 import { main as input } from "./input.ts";
 import { main as load } from "./load.ts";
 import { main as output } from "./output.ts";
+import { main as chain } from "./chain.ts";
 import { initializeDatabase } from "./orm.ts";
 
 type ComponentMain = (sequelize: Sequelize) => Promise<void>;
@@ -20,6 +21,7 @@ const componentMap: Record<string, ComponentMain> = {
     output,
     load,
     dump,
+    chain,
 };
 
 async function run(addr: string, components: string[]): Promise<void> {

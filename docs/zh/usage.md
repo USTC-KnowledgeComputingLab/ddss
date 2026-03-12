@@ -47,6 +47,7 @@ ddss --component input output egg
 - `input`: 交互式输入接口
 - `output`: 实时显示事实和想法
 - `search`: 前向链接演绎搜索引擎
+- `chain`: 使用 Chain API 的替代前向链接引擎
 - `egg`: 基于 E-graph 的等式推理引擎
 - `load`: 批量导入事实
 - `dump`: 导出所有事实和想法
