@@ -22,10 +22,11 @@ export async function main(sequelize: Sequelize): Promise<void> {
 
         const handler = (rule: Rule) => {
             const ds = rule.toString();
-            tasks.push(insertOrIgnore(Fact, ds));
             const idea = strRuleGetStrIdea(ds);
             if (idea) {
                 tasks.push(insertOrIgnore(Idea, idea));
+            } else {
+                tasks.push(insertOrIgnore(Fact, ds));
             }
             return false;
         };
