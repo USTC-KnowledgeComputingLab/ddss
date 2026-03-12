@@ -47,6 +47,7 @@ Available components:
 - `input`: Interactive input interface
 - `output`: Real-time display of facts and ideas
 - `search`: Forward-chaining deductive search engine
+- `chain`: Alternative forward-chaining engine using Chain API
 - `egg`: E-graph based equality reasoning engine
 - `load`: Batch import facts from standard input
 - `dump`: Export all facts and ideas to output

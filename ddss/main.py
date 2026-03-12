@@ -11,6 +11,7 @@ from .input import main as input
 from .output import main as output
 from .load import main as load
 from .dump import main as dump
+from .chain import main as chain
 
 component_map: dict[str, callable[[async_sessionmaker[AsyncSession]], Awaitable[None]]] = {
     "search": search,
@@ -19,6 +20,7 @@ component_map: dict[str, callable[[async_sessionmaker[AsyncSession]], Awaitable[
     "output": output,
     "load": load,
     "dump": dump,
+    "chain": chain,
 }
 
 

@@ -7,4 +7,5 @@
 - **Load** (`ddss/load.py`, `ddss/load.ts`)：从标准输入批量导入事实。
 - **Dump** (`ddss/dump.py`, `ddss/dump.ts`)：将所有事实和想法导出到输出。
 - **Search** (`ddss/search.py`, `ddss/search.ts`)：前向链接演绎搜索引擎。
+- **Chain** (`ddss/chain.py`, `ddss/chain.ts`)：使用 Chain API 的替代前向链接引擎。
 - **Egg** (`ddss/egg.py`, `ddss/egg.ts`)：基于 E-graph 的等式推理引擎。
