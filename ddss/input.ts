@@ -2,10 +2,10 @@ import * as readline from "node:readline/promises";
 import { stdin as input, stdout as output } from "node:process";
 import type { Sequelize } from "sequelize";
 import { parse } from "atsds-bnf";
-import { Fact, Idea, initializeDatabase, insertOrIgnore } from "./orm.ts";
+import { Fact, Idea, insertOrIgnore } from "./orm.ts";
 import { patchStdout, strRuleGetStrIdea } from "./utility.ts";
 
-export async function main(sequelize: Sequelize) {
+export async function main(sequelize: Sequelize): Promise<void> {
     const rl = readline.createInterface({ input, output });
     rl.setPrompt("input: ");
     const unpatch = patchStdout(rl);
@@ -21,10 +21,9 @@ export async function main(sequelize: Sequelize) {
 
         try {
             const ds = parse(data);
-            const dsStr = ds.toString();
 
-            await insertOrIgnore(Fact, dsStr);
-            const idea = strRuleGetStrIdea(dsStr);
+            await insertOrIgnore(Fact, ds);
+            const idea = strRuleGetStrIdea(ds);
             if (idea) {
                 await insertOrIgnore(Idea, idea);
             }

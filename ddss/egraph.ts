@@ -9,15 +9,16 @@ function extractLhsRhsFromRule(data: Rule): [Term, Term] | null {
     if (data.length() !== 0) {
         return null;
     }
-    const term = data.conclusion();
-    const inner = term.term();
-    if (!(inner instanceof List)) {
+    const term = data.conclusion().term();
+    if (!(term instanceof List)) {
         return null;
     }
-    if (!(inner.length() === 4 && inner.getitem(0).toString() === "binary" && inner.getitem(1).toString() === "==")) {
+    if (!(term.length() === 4 && term.getitem(0).toString() === "binary" && term.getitem(1).toString() === "==")) {
         return null;
     }
-    return [inner.getitem(2), inner.getitem(3)];
+    const lhs = term.getitem(2);
+    const rhs = term.getitem(3);
+    return [lhs, rhs];
 }
 
 function buildLhsRhsToTerm(lhs: Term, rhs: Term): Term {

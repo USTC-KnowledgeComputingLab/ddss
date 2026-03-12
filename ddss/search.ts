@@ -1,10 +1,10 @@
 import { Op, type Sequelize } from "sequelize";
 import { Search } from "atsds";
 import type { Rule } from "atsds";
-import { Fact, Idea, initializeDatabase, insertOrIgnore } from "./orm.ts";
+import { Fact, Idea, insertOrIgnore } from "./orm.ts";
 import { strRuleGetStrIdea } from "./utility.ts";
 
-export async function main(sequelize: Sequelize) {
+export async function main(sequelize: Sequelize): Promise<void> {
     const search = new Search();
     let maxFact = -1;
 
@@ -21,9 +21,9 @@ export async function main(sequelize: Sequelize) {
         const tasks: Promise<void>[] = [];
 
         const handler = (rule: Rule) => {
-            const dsStr = rule.toString();
-            tasks.push(insertOrIgnore(Fact, dsStr));
-            const idea = strRuleGetStrIdea(dsStr);
+            const ds = rule.toString();
+            tasks.push(insertOrIgnore(Fact, ds));
+            const idea = strRuleGetStrIdea(ds);
             if (idea) {
                 tasks.push(insertOrIgnore(Idea, idea));
             }

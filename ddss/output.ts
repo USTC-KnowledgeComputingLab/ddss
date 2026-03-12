@@ -1,8 +1,8 @@
 import { Op, type Sequelize } from "sequelize";
 import { unparse } from "atsds-bnf";
-import { Fact, Idea, initializeDatabase } from "./orm.ts";
+import { Fact, Idea } from "./orm.ts";
 
-export async function main(sequelize: Sequelize) {
+export async function main(sequelize: Sequelize): Promise<void> {
     let maxFact = -1;
     let maxIdea = -1;
 
