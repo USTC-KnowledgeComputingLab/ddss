@@ -1,12 +1,13 @@
 import asyncio
 from prompt_toolkit import PromptSession
 from prompt_toolkit.patch_stdout import patch_stdout
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from apyds_bnf import parse
 from .orm import insert_or_ignore, Facts, Ideas
 from .utility import str_rule_get_str_idea
 
 
-async def main(session):
+async def main(session: async_sessionmaker[AsyncSession]) -> None:
     try:
         prompt = PromptSession()
         while True:
@@ -17,9 +18,7 @@ async def main(session):
                 raise asyncio.CancelledError()
 
             data = line.strip()
-            if data == "":
-                continue
-            if data.startswith("//"):
+            if data == "" or data.startswith("//"):
                 continue
 
             try:

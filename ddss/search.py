@@ -1,11 +1,12 @@
 import asyncio
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from apyds import Search
 from .orm import insert_or_ignore, Facts, Ideas
 from .utility import str_rule_get_str_idea
 
 
-async def main(session):
+async def main(session: async_sessionmaker[AsyncSession]) -> None:
     try:
         search = Search()
         max_fact = -1

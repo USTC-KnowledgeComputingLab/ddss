@@ -5,7 +5,6 @@ import {
     type CreationOptional,
     type InferAttributes,
     type InferCreationAttributes,
-    type ModelStatic,
 } from "sequelize";
 
 class Fact extends Model<InferAttributes<Fact>, InferCreationAttributes<Fact>> {

@@ -1,11 +1,12 @@
 import asyncio
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from apyds import Rule
 from .orm import insert_or_ignore, Facts, Ideas
 from .egraph import Search
 
 
-async def main(session):
+async def main(session: async_sessionmaker[AsyncSession]) -> None:
     try:
         search = Search()
         pool = []

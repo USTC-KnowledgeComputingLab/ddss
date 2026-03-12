@@ -11,7 +11,7 @@ import { main as load } from "./load.ts";
 import { main as output } from "./output.ts";
 import { initializeDatabase } from "./orm.ts";
 
-type ComponentMain = (addr: string, sequelize: Sequelize) => Promise<void>;
+type ComponentMain = (sequelize: Sequelize) => Promise<void>;
 
 const componentMap: Record<string, ComponentMain> = {
     search,
@@ -22,7 +22,9 @@ const componentMap: Record<string, ComponentMain> = {
     dump,
 };
 
-async function run(addr: string, components: string[]) {
+async function run(addr: string, components: string[]): Promise<void> {
+    const sequelize = await initializeDatabase(addr);
+
     for (const name of components) {
         if (!(name in componentMap)) {
             console.error(`error: unsupported component: ${name}`);
@@ -30,11 +32,9 @@ async function run(addr: string, components: string[]) {
         }
     }
 
-    const sequelize = await initializeDatabase(addr);
-
     const promises = components.map((name) => {
         const component = componentMap[name]!;
-        return component(addr, sequelize);
+        return component(sequelize);
     });
 
     await Promise.race(promises);
@@ -42,7 +42,7 @@ async function run(addr: string, components: string[]) {
     await sequelize.close();
 }
 
-export function cli() {
+export async function cli(): Promise<void> {
     const program = new Command();
 
     program

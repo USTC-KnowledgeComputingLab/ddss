@@ -1,18 +1,17 @@
 import asyncio
 import sys
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from apyds_bnf import parse
 from .orm import insert_or_ignore, Facts, Ideas
 from .utility import str_rule_get_str_idea
 
 
-async def main(session):
+async def main(session: async_sessionmaker[AsyncSession]) -> None:
     try:
         async with session() as sess:
             for line in sys.stdin:
                 data = line.strip()
-                if data == "":
-                    continue
-                if data.startswith("//"):
+                if data == "" or data.startswith("//"):
                     continue
 
                 try:

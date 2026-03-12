@@ -10,7 +10,7 @@ export function strRuleGetStrIdea(data: string): string | null {
     return null;
 }
 
-export function patchStdout(rl: Interface) {
+export function patchStdout(rl: Interface): () => void {
     const originalWrite = stdout.write;
     const originalLog = console.log;
     const originalError = console.error;

@@ -1,10 +1,11 @@
 import asyncio
 from sqlalchemy import select
+from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from apyds_bnf import unparse
 from .orm import Facts, Ideas
 
 
-async def main(session):
+async def main(session: async_sessionmaker[AsyncSession]) -> None:
     try:
         async with session() as sess:
             for i in await sess.scalars(select(Ideas)):

@@ -1,9 +1,9 @@
 import { Op, type Sequelize } from "sequelize";
 import { Rule } from "atsds";
 import { Search } from "./egraph.ts";
-import { Fact, Idea, initializeDatabase, insertOrIgnore } from "./orm.ts";
+import { Fact, Idea, insertOrIgnore } from "./orm.ts";
 
-export async function main(sequelize: Sequelize) {
+export async function main(sequelize: Sequelize): Promise<void> {
     const search = new Search();
     let pool: Rule[] = [];
     let maxFact = -1;

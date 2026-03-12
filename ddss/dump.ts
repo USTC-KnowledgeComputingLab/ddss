@@ -1,12 +1,8 @@
 import type { Sequelize } from "sequelize";
 import { unparse } from "atsds-bnf";
-import { Fact, Idea, initializeDatabase } from "./orm.ts";
+import { Fact, Idea } from "./orm.ts";
 
-export async function main(addr: string, sequelize?: Sequelize) {
-    if (!sequelize) {
-        sequelize = await initializeDatabase(addr);
-    }
-
+export async function main(sequelize: Sequelize): Promise<void> {
     const ideas = await Idea.findAll();
     for (const idea of ideas) {
         console.log("idea:", unparse(idea.data));
