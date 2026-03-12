@@ -20,9 +20,10 @@ async def main(session: async_sessionmaker[AsyncSession]) -> None:
 
                 def handler(rule):
                     ds = str(rule)
-                    tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, ds)))
                     if idea := str_rule_get_str_idea(ds):
                         tasks.append(asyncio.create_task(insert_or_ignore(sess, Ideas, idea)))
+                    else:
+                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, ds)))
                     return False
 
                 chain.execute(handler)

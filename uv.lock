@@ -34,54 +34,54 @@ wheels = [
 
 [[package]]
 name = "apyds"
-version = "0.0.18"
+version = "0.0.19"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/b1/9a/eae77d7c21b6b8bbe9f6fd19f46b613ddd0dde22db1d8719ce980a1e9325/apyds-0.0.18.tar.gz", hash = "sha256:122b6de3b37504249073f5c66b23a8c2fae8366c196d155ab223a35a7e87b1ec", size = 373855, upload-time = "2026-03-12T08:16:23.284Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/14/09/da63d4544d1eccf2e098487353f6aa1ac581af40894c2405b74e80675129/apyds-0.0.19.tar.gz", hash = "sha256:eccaa821da4470638fdfc8039ead8d501c7d54df1fb35b862d55ca3c8f31d204", size = 373927, upload-time = "2026-03-12T11:09:38.309Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/77/fd/6ecbbbbc603074f08832539582e6302445ae1ad2c7fd54e906d22ced88b9/apyds-0.0.18-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:66cba4906baa7bbabc3075ac2084c56d41f4449d08b0622542427d741127ad8b", size = 298039, upload-time = "2026-03-12T08:15:54.568Z" },
-    { url = "https://files.pythonhosted.org/packages/d8/b0/44c1b513bf2c8ae57f99510010dd5de642c48ae838cf56740a0d5d9da305/apyds-0.0.18-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:60f5cd0defd0e861dac65f7b0b105b27f98234dbea78289c63831d54b3e9c21a", size = 193332, upload-time = "2026-03-12T08:15:56.03Z" },
-    { url = "https://files.pythonhosted.org/packages/6e/fe/01fcb29c70e0326f9c8fd6c7e2573119ed6e058619f412097f4b9821b4b8/apyds-0.0.18-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:3a695c697534b436af939aa2aa89050b304fdc3eb66e4b48984b52b20d2e66e5", size = 1230283, upload-time = "2026-03-12T08:15:57.582Z" },
-    { url = "https://files.pythonhosted.org/packages/c9/af/0e62528ca36b10100c6fdfa4ad0cb71ea92f2dff776267f08c192b2a1d38/apyds-0.0.18-cp311-cp311-win_amd64.whl", hash = "sha256:8db8cb3f6566679b3b7638d42419bb284b5c53bc5c7bfc4324beec00ad02957e", size = 157274, upload-time = "2026-03-12T08:15:59.348Z" },
-    { url = "https://files.pythonhosted.org/packages/b7/7a/c8e1af997c90ef98812d1cddd40ff71efcfcc7ed3ec7050932912648008e/apyds-0.0.18-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:5497e0ae9520c409ef8ac774cb7d4dc79a0ccbf59df3977338654da1fcb7438d", size = 299590, upload-time = "2026-03-12T08:16:00.639Z" },
-    { url = "https://files.pythonhosted.org/packages/7d/dc/ff4a3c0ef9603e951f4691b025e3821618dc0deb7aa701bbd79d88b8a8ce/apyds-0.0.18-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:6b82102eb9d09b95c23674f456ca247aec58093eabd0bda69653c082d66f9512", size = 195662, upload-time = "2026-03-12T08:16:01.906Z" },
-    { url = "https://files.pythonhosted.org/packages/98/59/212a2c8c7c4c0469c5067d431b15257f255df784de8b46c253564a4a7930/apyds-0.0.18-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:55b814a51c40d0c25664631b7dcf9243b6f69aa0178a78d72cf54fe5b1612c77", size = 1232717, upload-time = "2026-03-12T08:16:03.125Z" },
-    { url = "https://files.pythonhosted.org/packages/5c/b0/bbab0fd99b8867c8e634502ff8e76ccfc9b665f3a0ccfbb731b206549e86/apyds-0.0.18-cp312-cp312-win_amd64.whl", hash = "sha256:a8bab9763566b5c3c5d9852f35670dfc4ff91d8e23a8163751d5800c32f2d9e9", size = 159373, upload-time = "2026-03-12T08:16:04.514Z" },
-    { url = "https://files.pythonhosted.org/packages/0d/99/ba44c93b39c120cf0669e156787107f1808c99cd3c9563209e8019f8ab2e/apyds-0.0.18-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:d28c15bd2addf0f3df2e02af39a4689a2b14965bc80e9df6c918012e78ca7ee9", size = 299640, upload-time = "2026-03-12T08:16:05.938Z" },
-    { url = "https://files.pythonhosted.org/packages/57/d1/42e270b99360670e8e1198d6fc6f6376fc0aa5a7e25c145ce85168ab58d6/apyds-0.0.18-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:19eb44c1811e7f152690a84b19fd21f773535bb2f42a40a1638c9e4326bdd6ed", size = 195675, upload-time = "2026-03-12T08:16:07.508Z" },
-    { url = "https://files.pythonhosted.org/packages/da/9a/463e6ba8541049ff0652989041dbe6246f845a22cff7ab07692156718bf2/apyds-0.0.18-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:58f019fd5e3562f67dfaee8bdc1d09ed899341f86996fec9e23eb7e253d53599", size = 1232887, upload-time = "2026-03-12T08:16:08.981Z" },
-    { url = "https://files.pythonhosted.org/packages/a7/f8/f8dabcb3b414e0107f42b909d05492c0b028ce7e4319125f894ee0ad0a30/apyds-0.0.18-cp313-cp313-win_amd64.whl", hash = "sha256:d9c3f2652652fd1bbaac006719cb50526a6f0bea5fe78120b011d0082dd8b944", size = 159372, upload-time = "2026-03-12T08:16:10.827Z" },
-    { url = "https://files.pythonhosted.org/packages/85/7b/4e85c7de22c13e611e9ba66a09ce1a29cc3134bccbe558e38d573cc2b9ca/apyds-0.0.18-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:454f321aa5bcb2202abd402fabb6168310adf35390177844e294cd51809caa72", size = 301290, upload-time = "2026-03-12T08:16:12.303Z" },
-    { url = "https://files.pythonhosted.org/packages/9f/ac/f824443fb9e93e7d404fb5067381932b982fea5a40c281bdf9b2b080aec8/apyds-0.0.18-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:2572a6206065f7d62439dce85d2e08ebc7f914642f40c53f6d9a8611f314d669", size = 195996, upload-time = "2026-03-12T08:16:13.779Z" },
-    { url = "https://files.pythonhosted.org/packages/6c/64/16d6cbcf34ae514c1fc1aa624857e1ec21f253c25e542958713f26998cd8/apyds-0.0.18-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:43d5e921b588617d23c9df4393451cbadd4dbdd97a41770e06875b1fe54caddb", size = 1233139, upload-time = "2026-03-12T08:16:15.122Z" },
-    { url = "https://files.pythonhosted.org/packages/0a/48/d1ae2497759d1edd657d1c8294f1ba073c40442cb4277c792c12904a4bf3/apyds-0.0.18-cp314-cp314-win_amd64.whl", hash = "sha256:a5c19541b7c048156e896de94912a236b49c34ff98ed7fb0ce48086b372238c2", size = 163252, upload-time = "2026-03-12T08:16:16.722Z" },
-    { url = "https://files.pythonhosted.org/packages/44/90/e2c2248c1b82bb8cf00d2e5aa13f774d06450a095a614266244c858fc738/apyds-0.0.18-cp314-cp314t-macosx_10_15_universal2.whl", hash = "sha256:7fcfe5b8827463addc014944d13e9de37ce67b5bb013b39c63418ba2fe7eac12", size = 320360, upload-time = "2026-03-12T08:16:18.192Z" },
-    { url = "https://files.pythonhosted.org/packages/b0/75/94e2ba81c5050637ecde2abf71a6451b9a989eed3f988fe0eaac7629b20e/apyds-0.0.18-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:1b7e6de3a141e7180de474f227bd2ddf72c1cdc33f84ff02562f397a6784bd6b", size = 197728, upload-time = "2026-03-12T08:16:19.744Z" },
-    { url = "https://files.pythonhosted.org/packages/38/38/d0b92e405816cb3ff5c2a9486ccd811d3ba71da545c479da14f35e5cdd92/apyds-0.0.18-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:7049bc9bcb6a9a5a7ec37f117e84bcbdb4ae3e383c6f927f6be3ea46af004395", size = 1234948, upload-time = "2026-03-12T08:16:20.817Z" },
-    { url = "https://files.pythonhosted.org/packages/f3/af/16da7fedb6a0c75e56e01e05f41b2695a73a66e4ce6279734c6a22b6e3b6/apyds-0.0.18-cp314-cp314t-win_amd64.whl", hash = "sha256:fa8876d0e55430001c1a6f64f6aa5cdaecdea75f3e5e9e8c96cd9486c1465d0e", size = 181667, upload-time = "2026-03-12T08:16:22.129Z" },
+    { url = "https://files.pythonhosted.org/packages/e1/63/3e499ecbdd0948198ea0d357b8e42f99f31611af2a4b24dc35c52403cd6b/apyds-0.0.19-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:841408d63902dc5ce7463c06a72aa025779f39a605a3a51539fadd54d604d972", size = 297392, upload-time = "2026-03-12T11:09:04.312Z" },
+    { url = "https://files.pythonhosted.org/packages/a8/93/40ec60d851b552516628ab4e241bbea2cb2b8ff0a5018a6e94d95a5643de/apyds-0.0.19-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:bf3352aefda66e038ac6cb6dc6b0c2bf9ad3a76e3cd497cc7338a596d94ae15e", size = 193681, upload-time = "2026-03-12T11:09:06.104Z" },
+    { url = "https://files.pythonhosted.org/packages/15/7a/a783e06da4b836ad9fcac8f013e5ec3b3912e7d2cf37c1ff0c36f05a5d89/apyds-0.0.19-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:b2a03fc2fb16dffb9cd2735e2248a4b2bf187ccb2e6bc5799c92efd8638b0eb2", size = 1230958, upload-time = "2026-03-12T11:09:08.118Z" },
+    { url = "https://files.pythonhosted.org/packages/7c/c1/fe65637c2a39917ece9f2bfaecaaf4691926227726a3622708f162ef6e5c/apyds-0.0.19-cp311-cp311-win_amd64.whl", hash = "sha256:d0988c452e8d47ee7fa080fee71cb87638c2b6f2df4c0671e200264216b91fe5", size = 157628, upload-time = "2026-03-12T11:09:10.249Z" },
+    { url = "https://files.pythonhosted.org/packages/db/8e/478c59628b44ad34fe0d497c3e32cc16ebdcefe0ffd26fd042a908985c6c/apyds-0.0.19-cp312-cp312-macosx_10_13_universal2.whl", hash = "sha256:059e77aafbe0052307509b592ec625cb813cb4f80ffc645cb032a7a9b82cf1e3", size = 299011, upload-time = "2026-03-12T11:09:11.978Z" },
+    { url = "https://files.pythonhosted.org/packages/ac/4c/8d3cc18466351836adcb7e5cde4eee80ac6f9cf315817eff50d005752902/apyds-0.0.19-cp312-cp312-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:3ed9c43f25101e5fecb478022498e55198f79650600885d982aa83222a40f1a2", size = 195854, upload-time = "2026-03-12T11:09:13.292Z" },
+    { url = "https://files.pythonhosted.org/packages/9b/83/7f8c3ea7767f5abb278a4979ac3e384c407e5d0a981a4b5584bfa28f414b/apyds-0.0.19-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:7ba8d78cb20b940fb66d4308e6c933e8408506580e771432c3dec62962dda464", size = 1232923, upload-time = "2026-03-12T11:09:15.053Z" },
+    { url = "https://files.pythonhosted.org/packages/68/8b/6ba167848de2e74143d06887340b4e42585b4946dcbc32d21ce1fd2b2113/apyds-0.0.19-cp312-cp312-win_amd64.whl", hash = "sha256:8c45ed7b495e95aa510b094da41ad729a7211b3c9099b7bd19a5e44245ddba8d", size = 159746, upload-time = "2026-03-12T11:09:16.514Z" },
+    { url = "https://files.pythonhosted.org/packages/76/e1/a54b2b5cf0a111d9a29ac68664d1450e3f2c01e7befc0abf26cb0ba8eb19/apyds-0.0.19-cp313-cp313-macosx_10_13_universal2.whl", hash = "sha256:349986b8bcaedd65df634d1e199f0e5297d60840c4dbfe06ca3f76c5c73a88aa", size = 299101, upload-time = "2026-03-12T11:09:17.997Z" },
+    { url = "https://files.pythonhosted.org/packages/2a/85/900d67410bebfea57764061ff2931e6d08eea0cf9fa40ca84b283608721e/apyds-0.0.19-cp313-cp313-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:7ef61a16541c6136ed3627eff8ebb25b50ad68472978ab4a40ce21ac8a4c0cfc", size = 195922, upload-time = "2026-03-12T11:09:19.406Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/2a/7e2e2c20a0328a7466e56a7f8814d3d15a0eb084a8d6e2c5abfd0e44f5df/apyds-0.0.19-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:d151971edd509e3cfab9878b21449d1fd21fda263123b42389cefc74b8e8a7e8", size = 1233004, upload-time = "2026-03-12T11:09:21.18Z" },
+    { url = "https://files.pythonhosted.org/packages/f3/91/4dc7ae951ef0c1320871ee082696eddbf80a9c582a2b64a83b624e58209b/apyds-0.0.19-cp313-cp313-win_amd64.whl", hash = "sha256:ac418f4f7481e1610c04278855a842beefcf39f396a16062557226f067bbbf5b", size = 159737, upload-time = "2026-03-12T11:09:23.468Z" },
+    { url = "https://files.pythonhosted.org/packages/68/99/fe6f870de8a2cfb5aaecee052cd16e0f32c47325831b2f8cccd2ae66b3ef/apyds-0.0.19-cp314-cp314-macosx_10_15_universal2.whl", hash = "sha256:4ca0a3152b11649959aa068752099cebb4a9ec0d1a12087a6f4ff3e145164ce5", size = 300733, upload-time = "2026-03-12T11:09:24.892Z" },
+    { url = "https://files.pythonhosted.org/packages/b0/cf/6ea96708d49cda856849d0f49b13c06f3d56548c72b786c16b26a97752f6/apyds-0.0.19-cp314-cp314-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:76ed914b4aed3874def762ed97d25650b7db0e2a199dac8371dbae2623cd25c7", size = 196315, upload-time = "2026-03-12T11:09:27.095Z" },
+    { url = "https://files.pythonhosted.org/packages/1c/83/05b57fbcc202f23b1489b9293047706460b59266256b135e9f195b10c0e2/apyds-0.0.19-cp314-cp314-musllinux_1_2_x86_64.whl", hash = "sha256:c4443a3028ad5d5b77bbb0c25659a1abbd716595f257ad589a0c820edc2ec278", size = 1233202, upload-time = "2026-03-12T11:09:28.638Z" },
+    { url = "https://files.pythonhosted.org/packages/7e/7f/e5d9648347fbac80a1a8208af62fa5b135af5cc08d922aa3d8814412945f/apyds-0.0.19-cp314-cp314-win_amd64.whl", hash = "sha256:15dded896a2348b32a631dafd5d5a5030f205b31acfd7aab2721c42d554a2b22", size = 163501, upload-time = "2026-03-12T11:09:30.376Z" },
+    { url = "https://files.pythonhosted.org/packages/8e/85/6e55344d4490f8f49d07999d8961e03f42527d2f239c1e95efad54acc82c/apyds-0.0.19-cp314-cp314t-macosx_10_15_universal2.whl", hash = "sha256:dfd92a199c8d43016996d3172352bfa47d03e69ccc4443ed0fecd44faf81f357", size = 319904, upload-time = "2026-03-12T11:09:32.049Z" },
+    { url = "https://files.pythonhosted.org/packages/06/22/3de0b30675d9e6c09bac33d1fb9bfeaeff2f4233e5892a264b90d65ff583/apyds-0.0.19-cp314-cp314t-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl", hash = "sha256:f2fd561f44d903baae71f62f575dd675da581ecfb799801d3a35d781644faa1b", size = 197940, upload-time = "2026-03-12T11:09:33.785Z" },
+    { url = "https://files.pythonhosted.org/packages/6d/e1/400bb32176cafc2d9f8d1353a0c8b09c064c6bbe7d889807bbe4abee85b9/apyds-0.0.19-cp314-cp314t-musllinux_1_2_x86_64.whl", hash = "sha256:c18ce6366f75037ef93910dfa7491c7aa06b958e145f4d5de97e0653e007c857", size = 1235407, upload-time = "2026-03-12T11:09:35.257Z" },
+    { url = "https://files.pythonhosted.org/packages/93/5f/e16db1b340efa52590827411547d7ec2e9bf67211c5aa854cfffe29fa0d5/apyds-0.0.19-cp314-cp314t-win_amd64.whl", hash = "sha256:f6735e1fe4ba219ef98e53712fe908fee244666d72fe4291aacf9f4a4b2fa48f", size = 181963, upload-time = "2026-03-12T11:09:36.574Z" },
 ]
 
 [[package]]
 name = "apyds-bnf"
-version = "0.0.18"
+version = "0.0.19"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "antlr4-python3-runtime" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/01/fc/c91593c89f2be86b7c8da5b0bbddd3504b085b3b727d496a1ca0f21d4fbe/apyds_bnf-0.0.18.tar.gz", hash = "sha256:c48239e3807d3382acf34f19fb96453cffd02b7aeaacb7b23466ade5cd67f935", size = 87959, upload-time = "2026-03-12T08:09:26.913Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/7d/6c/3963166c134dc86913332cf5658c55011e0e82e0129a75f009abdd7e6168/apyds_bnf-0.0.19.tar.gz", hash = "sha256:2eddc2ffbe70bdddb47aae36133be294690b8b1709a72ec3378fdd85c717c371", size = 87973, upload-time = "2026-03-12T11:03:15.043Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/6c/ee/1e589fd06d12d00897b6e3a401343dacab01a1490294798341f761f72393/apyds_bnf-0.0.18-py3-none-any.whl", hash = "sha256:027383eda40a7fde5e6abbc9228278e75fbe63462bb5c72ccfe34fc46b15de26", size = 17161, upload-time = "2026-03-12T08:09:25.832Z" },
+    { url = "https://files.pythonhosted.org/packages/6a/54/5aff46486241e2d920ea16f999d2febc447a29fe7c752dc013c6c32052af/apyds_bnf-0.0.19-py3-none-any.whl", hash = "sha256:7feb2950a252156957521681cd15ff59622a7fb7f0739eb6cc60d41045f2259a", size = 17158, upload-time = "2026-03-12T11:03:13.582Z" },
 ]
 
 [[package]]
 name = "apyds-egg"
-version = "0.0.18"
+version = "0.0.19"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "apyds" },
 ]
-sdist = { url = "https://files.pythonhosted.org/packages/77/40/a758fea56f23d057e3a4f07c7c192fd7afdae6191d925b86ee6e1ae4ac9d/apyds_egg-0.0.18.tar.gz", hash = "sha256:53d139416f2982009a6787a3abd2583b16c0ede51c66b64506d8eb8c22082c2d", size = 86935, upload-time = "2026-03-12T08:09:32.533Z" }
+sdist = { url = "https://files.pythonhosted.org/packages/6b/82/2560473ae273eb77549eefa6ead1123f0d98a7488b6313845b1ce6e20764/apyds_egg-0.0.19.tar.gz", hash = "sha256:bb89825de4a176eb172062b09abd01181a8b6368477393e6731663221ec60429", size = 86943, upload-time = "2026-03-12T11:02:59.54Z" }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/51/7a/6d4e52b218ee68ab6e5b89394d0a4a1d11a1ac375c750a4e27617af2e9a6/apyds_egg-0.0.18-py3-none-any.whl", hash = "sha256:d99cf91c1b9aca25feda61d4f04937a474cfa2d9c0aec7d36dc485d16e24a5d2", size = 5475, upload-time = "2026-03-12T08:09:31.048Z" },
+    { url = "https://files.pythonhosted.org/packages/e0/5a/94199f5cf7eb46d4286a0bba75354839a7555808e3e68be8e6a020c61bf0/apyds_egg-0.0.19-py3-none-any.whl", hash = "sha256:d9e2abd0728dbb2384f9b4130f5e23e8810a8505162239088e0e74dcc646a4ed", size = 5475, upload-time = "2026-03-12T11:02:58.405Z" },
 ]
 
 [[package]]
@@ -255,9 +255,9 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "apyds", specifier = "~=0.0.18" },
-    { name = "apyds-bnf", specifier = "~=0.0.18" },
-    { name = "apyds-egg", specifier = "~=0.0.18" },
+    { name = "apyds", specifier = "~=0.0.19" },
+    { name = "apyds-bnf", specifier = "~=0.0.19" },
+    { name = "apyds-egg", specifier = "~=0.0.19" },
     { name = "prompt-toolkit", specifier = "~=3.0.52" },
     { name = "pytest", marker = "extra == 'dev'", specifier = "~=9.0.2" },
     { name = "pytest-asyncio", marker = "extra == 'dev'", specifier = "~=1.3.0" },

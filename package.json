@@ -22,9 +22,9 @@
         "docs": "vitepress build"
     },
     "dependencies": {
-        "atsds": "^0.0.18",
-        "atsds-bnf": "^0.0.18",
-        "atsds-egg": "^0.0.18",
+        "atsds": "^0.0.19",
+        "atsds-bnf": "^0.0.19",
+        "atsds-egg": "^0.0.19",
         "commander": "^14.0.3",
         "mariadb": "^3.5.2",
         "mysql2": "^3.19.1",
