@@ -24,7 +24,7 @@ const componentMap: Record<string, ComponentMain> = {
     chain,
 };
 
-async function run(addr: string, components: string[]): Promise<void> {
+export async function run(addr: string, components: string[]): Promise<void> {
     const sequelize = await initializeDatabase(addr);
 
     for (const name of components) {
