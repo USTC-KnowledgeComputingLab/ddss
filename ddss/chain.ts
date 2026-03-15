@@ -18,21 +18,15 @@ export async function main(sequelize: Sequelize): Promise<void> {
             chain.add(fact.data);
         }
 
-        const tasks: Promise<void>[] = [];
-
-        const handler = (rule: Rule) => {
+        for (const rule of chain) {
             const ds = rule.toString();
             const idea = strRuleGetStrIdea(ds);
             if (idea) {
-                tasks.push(insertOrIgnore(Idea, idea));
+                await insertOrIgnore(Idea, idea);
             } else {
-                tasks.push(insertOrIgnore(Fact, ds));
+                await insertOrIgnore(Fact, ds);
             }
-            return false;
-        };
-
-        chain.execute(handler);
-        await Promise.all(tasks);
+        }
 
         await new Promise((resolve) => setTimeout(resolve, 0));
     }

@@ -16,17 +16,13 @@ async def main(session: async_sessionmaker[AsyncSession]) -> None:
                 for i in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
                     max_fact = max(max_fact, i.id)
                     search.add(i.data)
-                tasks = []
 
-                def handler(rule):
+                for rule in search:
                     ds = str(rule)
-                    tasks.append(asyncio.create_task(insert_or_ignore(sess, Facts, ds)))
+                    await insert_or_ignore(sess, Facts, ds)
                     if idea := str_rule_get_str_idea(ds):
-                        tasks.append(asyncio.create_task(insert_or_ignore(sess, Ideas, idea)))
-                    return False
+                        await insert_or_ignore(sess, Ideas, idea)
 
-                search.execute(handler)
-                await asyncio.gather(*tasks)
                 await sess.commit()
 
             await asyncio.sleep(0)
