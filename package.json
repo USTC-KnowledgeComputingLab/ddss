@@ -22,21 +22,21 @@
         "docs": "vitepress build"
     },
     "dependencies": {
-        "atsds": "^0.0.19",
-        "atsds-bnf": "^0.0.19",
-        "atsds-egg": "^0.0.19",
+        "atsds": "^0.0.20",
+        "atsds-bnf": "^0.0.20",
+        "atsds-egg": "^0.0.20",
         "commander": "^14.0.3",
         "mariadb": "^3.5.2",
         "mysql2": "^3.19.1",
         "pg": "^8.20.0",
         "sequelize": "^6.37.8",
-        "sqlite3": "^5.1.7"
+        "sqlite3": "^6.0.1"
     },
     "devDependencies": {
         "@rollup/plugin-terser": "^1.0.0",
         "@rollup/plugin-typescript": "^12.3.0",
         "@types/jest": "^30.0.0",
-        "@types/node": "^25.4.0",
+        "@types/node": "^25.5.0",
         "cross-env": "^10.1.0",
         "jest": "^30.3.0",
         "npm-run-all": "^4.1.5",
