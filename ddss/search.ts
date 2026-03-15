@@ -18,20 +18,14 @@ export async function main(sequelize: Sequelize): Promise<void> {
             search.add(fact.data);
         }
 
-        const tasks: Promise<void>[] = [];
-
-        const handler = (rule: Rule) => {
+        for (const rule of search) {
             const ds = rule.toString();
-            tasks.push(insertOrIgnore(Fact, ds));
+            await insertOrIgnore(Fact, ds);
             const idea = strRuleGetStrIdea(ds);
             if (idea) {
-                tasks.push(insertOrIgnore(Idea, idea));
+                await insertOrIgnore(Idea, idea);
             }
-            return false;
-        };
-
-        search.execute(handler);
-        await Promise.all(tasks);
+        }
 
         await new Promise((resolve) => setTimeout(resolve, 0));
     }
