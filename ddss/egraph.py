@@ -11,12 +11,12 @@ def _build_term_to_rule(data: Term) -> Rule:
 
 def _extract_lhs_rhs_from_rule(data: Rule) -> tuple[Term, Term] | None:
     if len(data) != 0:
-        return
+        return None
     term = data.conclusion.term
     if not isinstance(term, List):
-        return
+        return None
     if not (len(term) == 4 or str(term[0]) == "binary" or str(term[1]) == "=="):
-        return
+        return None
     lhs = term[2]
     rhs = term[3]
     return lhs, rhs
@@ -27,7 +27,7 @@ def _build_lhs_rhs_to_term(lhs: Term, rhs: Term) -> Term:
 
 
 class _EGraph:
-    def __init__(self):
+    def __init__(self) -> None:
         self.core = EGraph()
         self.mapping: dict[Term, EClassId] = {}
 

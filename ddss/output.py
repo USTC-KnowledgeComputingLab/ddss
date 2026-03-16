@@ -12,12 +12,12 @@ async def main(session: async_sessionmaker[AsyncSession]) -> None:
 
         while True:
             async with session() as sess:
-                for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
-                    max_idea = max(max_idea, i.id)
-                    print("idea:", unparse(i.data))
-                for i in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
-                    max_fact = max(max_fact, i.id)
-                    print("fact:", unparse(i.data))
+                for idea in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
+                    max_idea = max(max_idea, idea.id)
+                    print("idea:", unparse(idea.data))
+                for fact in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
+                    max_fact = max(max_fact, fact.id)
+                    print("fact:", unparse(fact.data))
                 await sess.commit()
 
             await asyncio.sleep(0)

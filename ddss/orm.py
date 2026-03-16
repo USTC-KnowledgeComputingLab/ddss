@@ -5,9 +5,9 @@ from sqlalchemy.ext.asyncio import AsyncEngine, AsyncSession
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import Integer, Text
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
-from sqlalchemy.dialects.sqlite import insert as sqlite_insert
-from sqlalchemy.dialects.mysql import insert as mysql_insert
-from sqlalchemy.dialects.postgresql import insert as postgresql_insert
+from sqlalchemy.dialects.sqlite import insert as sqlite_insert, Insert as sqlite_insert_t
+from sqlalchemy.dialects.mysql import insert as mysql_insert, Insert as mysql_insert_t
+from sqlalchemy.dialects.postgresql import insert as postgresql_insert, Insert as postgresql_insert_t
 
 
 class Base(DeclarativeBase):
@@ -37,14 +37,16 @@ async def initialize_database(addr: str) -> tuple[AsyncEngine, async_sessionmake
 async def insert_or_ignore(sess: AsyncSession, model: type[Base], data: str, locks=defaultdict(asyncio.Lock)) -> None:
     match sess.bind.dialect.name:
         case "sqlite":
-            statement = sqlite_insert(model).values(data=data).on_conflict_do_nothing()
-            await asyncio.shield(sess.execute(statement))
+            sqlite_statement: sqlite_insert_t = sqlite_insert(model).values(data=data).on_conflict_do_nothing()
+            await asyncio.shield(sess.execute(sqlite_statement))
         case "mysql" | "mariadb":
-            statement = mysql_insert(model).values(data=data).prefix_with("IGNORE")
-            await asyncio.shield(sess.execute(statement))
+            mysql_statement: mysql_insert_t = mysql_insert(model).values(data=data).prefix_with("IGNORE")
+            await asyncio.shield(sess.execute(mysql_statement))
         case "postgresql":
-            statement = postgresql_insert(model).values(data=data).on_conflict_do_nothing()
-            await asyncio.shield(sess.execute(statement))
+            postgresql_statement: postgresql_insert_t = (
+                postgresql_insert(model).values(data=data).on_conflict_do_nothing()
+            )
+            await asyncio.shield(sess.execute(postgresql_statement))
         case _:
             async with locks[id(sess.bind)]:
                 try:
