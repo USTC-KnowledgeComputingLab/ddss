@@ -1,7 +1,7 @@
 import asyncio
 import tempfile
 import pathlib
-from typing import Annotated, Optional, Awaitable
+from typing import Annotated, Optional, Callable, Coroutine
 import tyro
 from sqlalchemy.ext.asyncio import async_sessionmaker, AsyncSession
 from .orm import initialize_database
@@ -13,7 +13,7 @@ from .load import main as load
 from .dump import main as dump
 from .chain import main as chain
 
-component_map: dict[str, callable[[async_sessionmaker[AsyncSession]], Awaitable[None]]] = {
+component_map: dict[str, Callable[[async_sessionmaker[AsyncSession]], Coroutine[None, None, None]]] = {
     "search": search,
     "egg": egg,
     "input": input,
@@ -29,7 +29,9 @@ async def run(addr: str, components: list[str]) -> None:
 
     try:
         try:
-            coroutines = [component_map[component](session) for component in components]
+            coroutines: list[Coroutine[None, None, None]] = [
+                component_map[component](session) for component in components
+            ]
         except KeyError as e:
             print(f"error: unsupported component: {str(e)}")
             return

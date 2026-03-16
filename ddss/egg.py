@@ -15,12 +15,12 @@ async def main(session: async_sessionmaker[AsyncSession]) -> None:
 
         while True:
             async with session() as sess:
-                for i in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
-                    max_idea = max(max_idea, i.id)
-                    pool.append(Rule(i.data))
-                for i in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
-                    max_fact = max(max_fact, i.id)
-                    search.add(Rule(i.data))
+                for idea in await sess.scalars(select(Ideas).where(Ideas.id > max_idea)):
+                    max_idea = max(max_idea, idea.id)
+                    pool.append(Rule(idea.data))
+                for fact in await sess.scalars(select(Facts).where(Facts.id > max_fact)):
+                    max_fact = max(max_fact, fact.id)
+                    search.add(Rule(fact.data))
                 search.rebuild()
                 tasks = []
                 next_pool = []

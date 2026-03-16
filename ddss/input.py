@@ -9,7 +9,7 @@ from .utility import str_rule_get_str_idea
 
 async def main(session: async_sessionmaker[AsyncSession]) -> None:
     try:
-        prompt = PromptSession()
+        prompt: PromptSession[str] = PromptSession()
         while True:
             try:
                 with patch_stdout():
