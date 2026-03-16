@@ -29,13 +29,13 @@ describe("dump", () => {
 
     it("test_dump_facts_correctly", async () => {
         await Fact.create({ data: "a\n----\nb\n" });
-        await main(addr, sequelize);
+        await main(sequelize);
         expect(getCapturedOutput()).toContain("fact: a => b");
     });
 
     it("test_dump_ideas_correctly", async () => {
         await Idea.create({ data: "x\n----\ny\n" });
-        await main(addr, sequelize);
+        await main(sequelize);
         expect(getCapturedOutput()).toContain("idea: x => y");
     });
 
@@ -45,7 +45,7 @@ describe("dump", () => {
         await Idea.create({ data: "x\n----\ny\n" });
         await Idea.create({ data: "p\n----\nq\n" });
 
-        await main(addr, sequelize);
+        await main(sequelize);
 
         const output = getCapturedOutput();
         expect(output).toContain("idea: x => y");
@@ -55,7 +55,7 @@ describe("dump", () => {
     });
 
     it("test_dump_empty_database", async () => {
-        await main(addr, sequelize);
+        await main(sequelize);
         expect(getCapturedOutput().trim()).toBe("");
     });
 
@@ -63,7 +63,7 @@ describe("dump", () => {
         await Fact.create({ data: "a\n----\nb\n" });
         await Idea.create({ data: "x\n----\ny\n" });
 
-        await main(addr, sequelize);
+        await main(sequelize);
 
         const output = getCapturedOutput();
         const ideaPos = output.indexOf("idea: x => y");
@@ -76,7 +76,7 @@ describe("dump", () => {
 
     it("test_dump_with_simple_fact", async () => {
         await Fact.create({ data: "----\nsimple\n" });
-        await main(addr, sequelize);
+        await main(sequelize);
         expect(getCapturedOutput()).toContain("fact:  => simple");
     });
 });

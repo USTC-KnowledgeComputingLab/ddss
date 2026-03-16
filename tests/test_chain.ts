@@ -1,6 +1,6 @@
 import { jest, describe, it, expect, beforeEach, afterEach } from "@jest/globals";
 import { main } from "../ddss/chain.ts";
-import { Fact, Idea } from "../ddss/orm.ts";
+import { Fact } from "../ddss/orm.ts";
 import { createTempDb } from "./utils.ts";
 
 describe("chain", () => {
