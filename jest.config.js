@@ -3,6 +3,6 @@ export default {
     collectCoverage: true,
     extensionsToTreatAsEsm: [".ts"],
     transform: {
-        "^.+\\.tsx?$": ["ts-jest", { useESM: true, tsconfig: "<rootDir>/tsconfig.json" }],
+        "^.+\\.tsx?$": ["@swc/jest"],
     },
 };
